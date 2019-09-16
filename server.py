@@ -6,13 +6,18 @@ import json
 
 class DynamicProcess():
     def __init__(self):
-        self.__y = np.array([0, 0])
-        self.__x = np.array([0, 0])
+        self.__dimension = 2
+        self.__zero_init()
         
-        self.coeff = {'A': np.array([[1, 2],[2, 1]]),
-                      'GAMMA': np.array([[1, 1],[1, 1]]),
-                      'C': np.array([[1, 0],[0, 1]])
+    def __zero_init(self):
+        self.__y = np.zeros([self.__dimension, self.__dimension])
+        self.__x = np.zeros([self.__dimension, self.__dimension])
+
+        self.coeff = {'A': np.zeros([self.__dimension, self.__dimension]),
+                      'GAMMA': np.zeros([self.__dimension, self.__dimension]),
+                      'C': np.zeros([self.__dimension, self.__dimension])
                       }
+
 
     def set_value(self, u):
         self.__x = np.dot(self.coeff['A'], self.__x) + np.dot(self.coeff['GAMMA'], u)
@@ -20,6 +25,10 @@ class DynamicProcess():
 
     def get_value(self):
         return self.__y
+
+    def set_dimension(self, dimension):
+        self.__dimension = dimension
+        self.__zero_init()
 
 
 class Measurement():
