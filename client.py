@@ -27,9 +27,8 @@ class DynamicProcessSession():
 
 
 dyn_process_session = DynamicProcessSession()
-dyn_process_session.get_output()
-dyn_process_session.set_input('1 2')
-dyn_process_session.get_coefficient('A')
 dyn_process_session.set_coefficient('A', json.dumps([[1, 2],[2, 1]]))
 dyn_process_session.set_coefficient('GAMMA', json.dumps([[1, 1],[1, 1]]))
 dyn_process_session.set_coefficient('C', json.dumps([[1, 0],[0, 1]]))
+dyn_process_session.get_output()
+dyn_process_session.set_input('1 2')
