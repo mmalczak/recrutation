@@ -4,7 +4,7 @@ import string
 import cherrypy
 
 
-class System():
+class DynamicProcess():
     def __init__(self):
         self.__y = 0
     
@@ -15,18 +15,18 @@ class System():
         return self.__y
 
 class Measurement():
-    def __init__(self, system):
-        self.__system = system
+    def __init__(self, dynamic_process):
+        self.__dynamic_process = dynamic_process
 
     def read_value(self):
-        return str(self.__system.get_value())
+        return str(self.__dynamic_process.get_value())
 
 class Controller():
-    def __init__(self, system):
-        self.__system = system
+    def __init__(self, dynamic_process):
+        self.__dynamic_process = dynamic_process
 
     def set_value(self, value):
-        self.__system.set_value(value)
+        self.__dynamic_process.set_value(value)
 
 
 
@@ -34,9 +34,9 @@ class Controller():
 class MeasureControlWebService(object):
 
     def __init__(self):
-        system = System()
-        self.__measurement = Measurement(system)
-        self.__controller = Controller(system)
+        dynamic_process = DynamicProcess()
+        self.__measurement = Measurement(dynamic_process)
+        self.__controller = Controller(dynamic_process)
 
     def GET(self):
         return self.__measurement.read_value() 
@@ -46,7 +46,7 @@ class MeasureControlWebService(object):
 
 
 if __name__ == '__main__':
-    system = System()
+    dynamic_process = DynamicProcess()
     conf = {
         '/': {
             'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
@@ -56,4 +56,5 @@ if __name__ == '__main__':
         }
     }
     cherrypy.server.socket_host = '20.0.0.2' 
-    cherrypy.quickstart(MeasureControlWebService(), '/', conf)
+#    cherrypy.quickstart(MeasureControlWebService(), '/', conf)
+    cherrypy.quickstart(MeasureControlWebService(), '/in_out/', conf)
