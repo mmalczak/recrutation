@@ -32,33 +32,35 @@ class DynamicProcess():
 
 class Measurement():
     def __init__(self, dynamic_process):
-        self.__dynamic_process = dynamic_process
+        self.dynamic_process = dynamic_process
 
     def read_value(self):
-        return str(self.__dynamic_process.get_value())
+        return str(self.dynamic_process.get_value())
 
 
 class Controller():
     def __init__(self, dynamic_process):
-        self.__dynamic_process = dynamic_process
+        self.dynamic_process = dynamic_process
 
     def set_value(self, value):
-        self.__dynamic_process.set_value(value)
+        self.dynamic_process.set_value(value)
 
 
 @cherrypy.expose
 class MeasureControlWebService(object):
 
     def __init__(self, dynamic_process):
-        self.__measurement = Measurement(dynamic_process)
-        self.__controller = Controller(dynamic_process)
+        self.measurement = Measurement(dynamic_process)
+        self.controller = Controller(dynamic_process)
 
     def GET(self):
-        return self.__measurement.read_value()
+        return self.measurement.read_value()
 
     def PUT(self, value):
         u = [float(i) for i in value.split()]
-        self.__controller.set_value(u)
+        u = np.array(u)
+        if np.shape(u)==(self.controller.dynamic_process.dimension,):
+            self.controller.set_value(u)
 
 @cherrypy.expose
 class CoefficientsWebService(object):
@@ -73,8 +75,9 @@ class CoefficientsWebService(object):
     def PUT(self, type, value):
         value = json.loads(value)
         value = np.array(value)
-
-        self.__dynamic_process.coeff[type] = value
+        if np.shape(value) == (self.__dynamic_process.dimension, 
+                self.__dynamic_process.dimension):
+            self.__dynamic_process.coeff[type] = value
 
 @cherrypy.expose
 class DimensionWebService(object):
