@@ -1,23 +1,25 @@
 import random
 import string
-
 import cherrypy
 import numpy as np
+
 
 class DynamicProcess():
     def __init__(self):
         self.__y = np.array([0, 0])
         self.__x = np.array([0, 0])
 
+        self.__A = np.array([[1, 2],[2, 1]])
+        self.__GAMMA = np.array([[1, 1],[1, 1]])
+        self.__C = np.array([[1, 0],[0, 1]])
+
     def set_value(self, u):
-        A = np.array([[1, 2],[2, 1]])
-        GAMMA = np.array([[1, 1],[1, 1]])
-        C = np.array([[1, 0],[0, 1]])
-        self.__x = np.dot(A, self.__x) + np.dot(GAMMA, u)
-        self.__y = np.dot(C, self.__x)
+        self.__x = np.dot(self.__A, self.__x) + np.dot(self.__GAMMA, u)
+        self.__y = np.dot(self.__C, self.__x)
 
     def get_value(self):
         return self.__y
+
 
 class Measurement():
     def __init__(self, dynamic_process):
@@ -34,18 +36,16 @@ class Controller():
         self.__dynamic_process.set_value(value)
 
 
-
 @cherrypy.expose
 class MeasureControlWebService(object):
 
-    def __init__(self):
-        dynamic_process = DynamicProcess()
+    def __init__(self, dynamic_process):
         self.__measurement = Measurement(dynamic_process)
         self.__controller = Controller(dynamic_process)
 
     def GET(self):
-        return self.__measurement.read_value() 
-    
+        return self.__measurement.read_value()
+
     def PUT(self, value):
         u = [float(i) for i in value.split()]
         self.__controller.set_value(u)
@@ -61,6 +61,7 @@ if __name__ == '__main__':
             'tools.response_headers.headers': [('Content-Type', 'text/plain')],
         }
     }
-    cherrypy.server.socket_host = '20.0.0.2' 
+    cherrypy.server.socket_host = '20.0.0.2'
 #    cherrypy.quickstart(MeasureControlWebService(), '/', conf)
-    cherrypy.quickstart(MeasureControlWebService(), '/in_out/', conf)
+    cherrypy.quickstart(MeasureControlWebService(dynamic_process), '/in_out/',
+                        conf)
