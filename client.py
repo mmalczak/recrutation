@@ -17,4 +17,4 @@ class DynamicProcessInOutSession():
 
 dyn_process_in_out_session = DynamicProcessInOutSession()
 dyn_process_in_out_session.get()
-dyn_process_in_out_session.put({'value':'12'})
+dyn_process_in_out_session.put({'value':'1 2'})
