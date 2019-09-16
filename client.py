@@ -1,20 +1,20 @@
 import requests
 
-class DynamicProcessInOutSession():
+class DynamicProcessSession():
 
     def __init__(self):
         self.__session = requests.Session()
-        self.__address = 'http://20.0.0.2:8080/in_out/'
+        self.__address = 'http://20.0.0.2:8080/'
 
-    def get(self):
-        r = self.__session.get(self.__address)
+    def get_output(self):
+        r = self.__session.get(self.__address + 'in_out/')
         print(r.text)
 
-    def put(self, data):
-        r = self.__session.put(self.__address, data=data)
+    def set_input(self, data):
+        r = self.__session.put(self.__address + 'in_out/', data=data)
         print(r.text)
 
 
-dyn_process_in_out_session = DynamicProcessInOutSession()
-dyn_process_in_out_session.get()
-dyn_process_in_out_session.put({'value':'1 2'})
+dyn_process_session = DynamicProcessSession()
+dyn_process_session.get_output()
+dyn_process_session.set_input({'value':'1 2'})
