@@ -6,18 +6,17 @@ import json
 
 class DynamicProcess():
     def __init__(self):
-        self.__dimension = 2
+        self.dimension = 2
         self.__zero_init()
         
     def __zero_init(self):
-        self.__y = np.zeros([self.__dimension, self.__dimension])
-        self.__x = np.zeros([self.__dimension, self.__dimension])
+        self.__y = np.zeros([self.dimension, self.dimension])
+        self.__x = np.zeros([self.dimension, self.dimension])
 
-        self.coeff = {'A': np.zeros([self.__dimension, self.__dimension]),
-                      'GAMMA': np.zeros([self.__dimension, self.__dimension]),
-                      'C': np.zeros([self.__dimension, self.__dimension])
+        self.coeff = {'A': np.zeros([self.dimension, self.dimension]),
+                      'GAMMA': np.zeros([self.dimension, self.dimension]),
+                      'C': np.zeros([self.dimension, self.dimension])
                       }
-
 
     def set_value(self, u):
         self.__x = np.dot(self.coeff['A'], self.__x) + np.dot(self.coeff['GAMMA'], u)
@@ -27,7 +26,7 @@ class DynamicProcess():
         return self.__y
 
     def set_dimension(self, dimension):
-        self.__dimension = dimension
+        self.dimension = dimension
         self.__zero_init()
 
 
@@ -37,6 +36,7 @@ class Measurement():
 
     def read_value(self):
         return str(self.__dynamic_process.get_value())
+
 
 class Controller():
     def __init__(self, dynamic_process):
@@ -76,6 +76,19 @@ class CoefficientsWebService(object):
 
         self.__dynamic_process.coeff[type] = value
 
+@cherrypy.expose
+class DimensionWebService(object):
+
+    def __init__(self, dynamic_process):
+        self.__dynamic_process = dynamic_process
+
+    def GET(self):
+        return str(self.__dynamic_process.dimension)
+
+    def PUT(self, value):
+        self.__dynamic_process.dimension = int(value)
+
+
 
 if __name__ == '__main__':
     dynamic_process = DynamicProcess()
@@ -92,6 +105,10 @@ if __name__ == '__main__':
                         conf)
     cherrypy.tree.mount(CoefficientsWebService(dynamic_process),
                         '/coefficients/', conf)
+
+    cherrypy.tree.mount(DimensionWebService(dynamic_process),
+                        '/dimension/', conf)
+
 
     cherrypy.engine.start()
     cherrypy.engine.block()

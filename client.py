@@ -25,6 +25,16 @@ class DynamicProcessSession():
                                data={'value':value})
         print(r.text)
 
+    def get_dimension(self):
+        r = self.__session.get(self.__address + 'dimension/')
+        print(r.text)
+
+    def set_dimension(self, value):
+        r = self.__session.put(self.__address + 'dimension/',
+                               data={'value':value})
+        print(r.text)
+
+
 
 dyn_process_session = DynamicProcessSession()
 dyn_process_session.set_coefficient('A', json.dumps([[1, 2],[2, 1]]))
@@ -32,3 +42,6 @@ dyn_process_session.set_coefficient('GAMMA', json.dumps([[1, 1],[1, 1]]))
 dyn_process_session.set_coefficient('C', json.dumps([[1, 0],[0, 1]]))
 dyn_process_session.get_output()
 dyn_process_session.set_input('1 2')
+dyn_process_session.get_dimension()
+dyn_process_session.set_dimension('2')
+
