@@ -2,14 +2,19 @@ import random
 import string
 
 import cherrypy
-
+import numpy as np
 
 class DynamicProcess():
     def __init__(self):
-        self.__y = 0
-    
-    def set_value(self, value):
-        self.__y = self.__y + value
+        self.__y = np.array([0, 0])
+        self.__x = np.array([0, 0])
+
+    def set_value(self, u):
+        A = np.array([[1, 2],[2, 1]])
+        GAMMA = np.array([[1, 1],[1, 1]])
+        C = np.array([[1, 0],[0, 1]])
+        self.__x = np.dot(A, self.__x) + np.dot(GAMMA, u)
+        self.__y = np.dot(C, self.__x)
 
     def get_value(self):
         return self.__y
@@ -42,7 +47,8 @@ class MeasureControlWebService(object):
         return self.__measurement.read_value() 
     
     def PUT(self, value):
-        self.__controller.set_value(float(value))
+        u = [float(i) for i in value.split()]
+        self.__controller.set_value(u)
 
 
 if __name__ == '__main__':
