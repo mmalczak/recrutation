@@ -4,6 +4,13 @@ import time
 import numpy as np
 
 
+def np_to_json(data):
+        return json.dumps(data.tolist())
+
+def json_to_np(data):
+    return np.array(json.loads(data))
+
+
 class DynamicProcessSession():
 
     def __init__(self):
@@ -74,13 +81,15 @@ dyn_process_session.get_coefficient('A')
 dyn_process_session.set_coefficient('GAMMA', json.dumps([[1, 1],[1, 1]]))
 dyn_process_session.set_coefficient('C', json.dumps([[1, 0],[0, 1]]))
 dyn_process_session.get_output()
-dyn_process_session.set_input('1 2')
 
 while(True):
     y = dyn_process_session.get_output()
     print(y)
 
-    #u = controller.get_control_signal(y)
-    dyn_process_session.set_input('1 2')
+    u = controller.get_control_signal(y)
+    print(u)
+    u = np.array([1, 2])
+    dyn_process_session.set_input(np_to_json(u))
     time.sleep(1)
+
 

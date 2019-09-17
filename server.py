@@ -4,6 +4,14 @@ import cherrypy
 import numpy as np
 import json
 
+
+def np_to_json(data):
+        return json.dumps(data.tolist())
+
+def json_to_np(data):
+    return np.array(json.loads(data))
+
+
 class DynamicProcess():
     def __init__(self):
         self.dimension = 2
@@ -23,7 +31,7 @@ class DynamicProcess():
         self.__y = np.dot(self.coeff['C'], self.__x)
 
     def get_value(self):
-        return json.dumps(self.__y.tolist())
+        return np_to_json(self.__y)
 
     def set_dimension(self, dimension):
         self.dimension = dimension
@@ -35,7 +43,7 @@ class Measurement():
         self.dynamic_process = dynamic_process
 
     def read_value(self):
-        return str(self.dynamic_process.get_value())
+        return self.dynamic_process.get_value()
 
 
 class Controller():
@@ -57,8 +65,7 @@ class MeasureControlWebService(object):
         return self.measurement.read_value()
 
     def PUT(self, value):
-        u = [float(i) for i in value.split()]
-        u = np.array(u)
+        u = json_to_np(value)
         if np.shape(u)==(self.controller.dynamic_process.dimension,):
             self.controller.set_value(u)
 
@@ -70,11 +77,10 @@ class CoefficientsWebService(object):
 
     def GET(self, type):
         coeff = self.__dynamic_process.coeff[type]
-        return np.array_str(coeff) 
+        return np_to_json(coeff)
 
     def PUT(self, type, value):
-        value = json.loads(value)
-        value = np.array(value)
+        value = json_to_np(value)
         if np.shape(value) == (self.__dynamic_process.dimension, 
                 self.__dynamic_process.dimension):
             self.__dynamic_process.coeff[type] = value
