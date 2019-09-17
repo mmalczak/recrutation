@@ -23,7 +23,7 @@ class DynamicProcess():
         self.__y = np.dot(self.coeff['C'], self.__x)
 
     def get_value(self):
-        return self.__y
+        return json.dumps(self.__y.tolist())
 
     def set_dimension(self, dimension):
         self.dimension = dimension
