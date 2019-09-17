@@ -10,8 +10,8 @@ class DynamicProcess():
         self.__zero_init()
         
     def __zero_init(self):
-        self.__y = np.zeros([self.dimension, self.dimension])
-        self.__x = np.zeros([self.dimension, self.dimension])
+        self.__y = np.zeros([self.dimension])
+        self.__x = np.zeros([self.dimension])
 
         self.coeff = {'A': np.zeros([self.dimension, self.dimension]),
                       'GAMMA': np.zeros([self.dimension, self.dimension]),
