@@ -2,13 +2,14 @@ import requests
 import json
 import time
 import numpy as np
-
+import scipy.signal
+import control
 
 def np_to_json(data):
         return json.dumps(data.tolist())
 
 def json_to_np(data):
-    return np.array(json.loads(data))
+    return np.matrix(json.loads(data))
 
 
 class DynamicProcessSession():
@@ -51,19 +52,35 @@ class Controller():
         self.__zero_init()
 
     def __zero_init(self):
-        self.K = np.zeros([self.dimension, self.dimension]),
+        self.x_est = np.matrix(np.zeros([self.dimension])).transpose()
+        self.u = np.matrix(np.zeros([self.dimension]))
+        self.K = np.matrix(np.zeros([self.dimension, self.dimension]))
+        self.A = np.matrix([[0, 0],[0, 0]])
+        self.B = np.matrix([[0, 0],[0, 0]])
+        self.C = np.matrix([[0, 0],[0, 0]])
+        self.D = np.matrix([[0, 0],[0, 0]])
+
 
     """OBSERVER"""
     def get_est_state(self, y):
-        return y
+        L = scipy.signal.place_poles(np.transpose(self.A), np.transpose(self.C), [0, 0]).gain_matrix
+        L = np.matrix(L).transpose()
+        #sys = control.ss(self.A, self.B, self.C, self.D, True)
+        #gram = control.gram(sys, 'o')
+        np.dot(self.B, self.u)
+        x_est = np.dot(self.A, self.x_est) + np.dot(self.B, self.u) +\
+                        np.dot(L, (y-np.dot(self.C, self.x_est)))
+        self.x_est = x_est
+        print('x_est: {}'.format(self.x_est))
 
     """CONTROLLER"""
     def get_control_signal(self, y):
-        x_est = self.get_est_state(y)
-        return np.dot(self.K, x_est)
-
-    def get_value(self):
-        return self.__y
+        #K = -scipy.signal.place_poles(np.array(self.A), np.array(self.B), [0, 0]).gain_matrix
+        K = -np.dot(np.linalg.pinv(self.B), self.A)
+        self.get_est_state(y)
+        self.u = np.dot(K, self.x_est)
+        #self.u = np.dot(K, y)
+        return self.u 
 
     def set_dimension(self, dimension):
         self.dimension = dimension
@@ -76,19 +93,25 @@ dyn_process_session = DynamicProcessSession()
 controller = Controller()
 dyn_process_session.get_dimension()
 dyn_process_session.set_dimension('2')
-dyn_process_session.set_coefficient('A', json.dumps([[1, 2],[2, 1]]))
-dyn_process_session.get_coefficient('A')
-dyn_process_session.set_coefficient('GAMMA', json.dumps([[1, 1],[1, 1]]))
-dyn_process_session.set_coefficient('C', json.dumps([[1, 0],[0, 1]]))
+A = [[1, 2],[2, 4]]
+B = [1, -1]
+C = [[1, 0],[0, 1]]
+D = [[0, 0],[0, 0]]
+dyn_process_session.set_coefficient('A', json.dumps(A))
+controller.A = np.matrix(A)
+controller.B = np.matrix(B).transpose()
+controller.C = np.matrix(C)
+controller.D = np.matrix(D)
+dyn_process_session.set_coefficient('GAMMA', json.dumps(B))
+dyn_process_session.set_coefficient('C', json.dumps(C))
 dyn_process_session.get_output()
 
 while(True):
+    print('------------------')
     y = dyn_process_session.get_output()
-    print(y)
-
+    print('y: {}'.format(y))
+    y = np.matrix(y).transpose()
     u = controller.get_control_signal(y)
-    print(u)
-    u = np.array([1, 2])
     dyn_process_session.set_input(np_to_json(u))
     time.sleep(1)
 

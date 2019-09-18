@@ -9,27 +9,29 @@ def np_to_json(data):
         return json.dumps(data.tolist())
 
 def json_to_np(data):
-    return np.array(json.loads(data))
+    return np.matrix(json.loads(data))
 
 
 class DynamicProcess():
     def __init__(self):
         self.dimension = 2
         self.__zero_init()
-        
+
     def __zero_init(self):
         self.__y = np.zeros([self.dimension])
         self.__x = np.zeros([self.dimension])
 
         self.coeff = {'A': np.zeros([self.dimension, self.dimension]),
-                      'GAMMA': np.zeros([self.dimension, self.dimension]),
+                      'GAMMA': np.transpose(np.matrix(np.zeros([self.dimension]))),
                       'C': np.zeros([self.dimension, self.dimension])
                       }
 
     def set_value(self, u):
         self.__x = np.dot(self.coeff['A'], self.__x) + np.dot(self.coeff['GAMMA'], u)
-        self.__y = np.dot(self.coeff['C'], self.__x)
-
+        print('state = {}'.format(self.__x))
+        self.__y = np.dot(self.coeff['C'], self.__x) + np.array([np.random.normal(0, 0.1), 0])
+        print('y = {}'.format(self.__y))
+    
     def get_value(self):
         return np_to_json(self.__y)
 
@@ -66,7 +68,7 @@ class MeasureControlWebService(object):
 
     def PUT(self, value):
         u = json_to_np(value)
-        if np.shape(u)==(self.controller.dynamic_process.dimension,):
+        if np.shape(u)==(1, self.controller.dynamic_process.dimension):
             self.controller.set_value(u)
 
 @cherrypy.expose
