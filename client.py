@@ -59,11 +59,11 @@ class Controller():
     def __zero_init(self):
         self.x_est = matrix(zeros([self.dimension])).transpose()
         self.u = 0 #matrix(zeros([self.dimension]))
-        self.K = matrix(zeros([self.dimension, self.dimension]))
-        self.A = matrix(zeros([self.dimension, self.dimension]))
-        self.B = matrix(zeros([self.dimension]))
-        self.C = matrix(zeros([self.dimension, self.dimension]))
-        self.D = matrix(zeros([self.dimension, self.dimension]))
+        self.K = None
+        self.A = None
+        self.B = None
+        self.C = None
+        self.D = None
 
 
     """OBSERVER"""
