@@ -102,7 +102,7 @@ class DimensionWebService(object):
         return str(self.__dynamic_process.num_states)
 
     def PUT(self, value):
-        self.__dynamic_process.num_states = int(value)
+        self.__dynamic_process.set_num_states(int(value))
 
 
 
