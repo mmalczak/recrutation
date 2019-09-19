@@ -25,7 +25,7 @@ class DynamicProcess():
         self.__zero_init()
 
     def __zero_init(self):
-        self.__y = 0 #transpose(matrix(zeros([self.dimension])))
+        self.__y = 0 
         self.__x = transpose(matrix(zeros([self.dimension])))
 
 
@@ -35,23 +35,8 @@ class DynamicProcess():
                       }
 
     def set_value(self, u):
-        print('================================================')
-        print("B: {}".format(self.coeff['B']))
-        print("u: {}".format(u))
-        print('state = {}'.format(self.__x))
-        print('y = {}'.format(self.__y))
         self.__x = dot(self.coeff['A'], self.__x) + dot(self.coeff['B'], u)
-        print("C: {}".format(self.coeff['C']))
-        print("self.__x: {}".format(self.__x))
-        print("dot: {}".format(self.coeff['C'], self.__x))
         self.__y = dot(self.coeff['C'], self.__x) + np.random.normal(0, 0.1)
-        print("")
-        print("B: {}".format(self.coeff['B']))
-        print("u: {}".format(u))
-        print('state = {}'.format(self.__x))
-        print('y = {}'.format(self.__y))
-        print('================================================')
-
 
     def get_value(self):
         return np_to_json(self.__y)
@@ -90,7 +75,6 @@ class MeasureControlWebService(object):
 
     def PUT(self, value):
         u = json_to_np(value)
-        #if np.shape(u)==(1, self.controller.dynamic_process.dimension):
         self.controller.set_value(u)
 
 @cherrypy.expose
