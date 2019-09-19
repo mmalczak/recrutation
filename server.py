@@ -37,6 +37,8 @@ class DynamicProcess():
     def set_value(self, u):
         self.__x = dot(self.coeff['A'], self.__x) + dot(self.coeff['B'], u)
         self.__y = dot(self.coeff['C'], self.__x) + np.random.normal(0, 0.1)
+        print("state: {}".format(self.__x))
+        print("out: {}".format(self.__y))
 
     def get_value(self):
         return np_to_json(self.__y)
