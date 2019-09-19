@@ -2,8 +2,13 @@ import requests
 import json
 import time
 import numpy as np
+from numpy import matrix
+from numpy import dot
+from numpy import zeros
+from numpy import transpose
 import scipy.signal
 import control
+
 
 def np_to_json(data):
         return json.dumps(data.tolist())
@@ -22,7 +27,6 @@ class DynamicProcessSession():
     def get_output(self):
         r = self.__session.get(self.__address + 'in_out/')
         return json.loads(r.text)
-        #print(r.text)
 
     def set_input(self, value):
         r = self.__session.put(self.__address + 'in_out/', data={'value':value})
@@ -52,35 +56,31 @@ class Controller():
         self.__zero_init()
 
     def __zero_init(self):
-        self.x_est = np.matrix(np.zeros([self.dimension])).transpose()
-        self.u = np.matrix(np.zeros([self.dimension]))
-        self.K = np.matrix(np.zeros([self.dimension, self.dimension]))
-        self.A = np.matrix([[0, 0],[0, 0]])
-        self.B = np.matrix([[0, 0],[0, 0]])
-        self.C = np.matrix([[0, 0],[0, 0]])
-        self.D = np.matrix([[0, 0],[0, 0]])
+        self.x_est = matrix(zeros([self.dimension])).transpose()
+        self.u = matrix(zeros([self.dimension]))
+        self.K = matrix(zeros([self.dimension, self.dimension]))
+        self.A = matrix(zeros([self.dimension, self.dimension]))
+        self.B = matrix(zeros([self.dimension]))
+        self.C = matrix(zeros([self.dimension, self.dimension]))
+        self.D = matrix(zeros([self.dimension, self.dimension]))
 
 
     """OBSERVER"""
     def get_est_state(self, y):
-        L = scipy.signal.place_poles(np.transpose(self.A), np.transpose(self.C), [0, 0]).gain_matrix
-        L = np.matrix(L).transpose()
-        #sys = control.ss(self.A, self.B, self.C, self.D, True)
-        #gram = control.gram(sys, 'o')
-        np.dot(self.B, self.u)
-        x_est = np.dot(self.A, self.x_est) + np.dot(self.B, self.u) +\
-                        np.dot(L, (y-np.dot(self.C, self.x_est)))
-        self.x_est = x_est
+        L = scipy.signal.place_poles(transpose(self.A), transpose(self.C), [0, 0]).gain_matrix
+        L = transpose(matrix(L))
+        self.x_est = dot(self.A, self.x_est) + dot(self.B, self.u) +\
+                        dot(L, (y-dot(self.C, self.x_est)))
         print('x_est: {}'.format(self.x_est))
+
 
     """CONTROLLER"""
     def get_control_signal(self, y):
         #K = -scipy.signal.place_poles(np.array(self.A), np.array(self.B), [0, 0]).gain_matrix
-        K = -np.dot(np.linalg.pinv(self.B), self.A)
+        K = -dot(np.linalg.pinv(self.B), self.A)
         self.get_est_state(y)
-        self.u = np.dot(K, self.x_est)
-        #self.u = np.dot(K, y)
-        return self.u 
+        self.u = dot(K, self.x_est)
+        return self.u
 
     def set_dimension(self, dimension):
         self.dimension = dimension
@@ -97,12 +97,12 @@ A = [[1, 2],[2, 4]]
 B = [1, -1]
 C = [[1, 0],[0, 1]]
 D = [[0, 0],[0, 0]]
+controller.A = matrix(A)
+controller.B = matrix(B).transpose()
+controller.C = matrix(C)
+controller.D = matrix(D)
 dyn_process_session.set_coefficient('A', json.dumps(A))
-controller.A = np.matrix(A)
-controller.B = np.matrix(B).transpose()
-controller.C = np.matrix(C)
-controller.D = np.matrix(D)
-dyn_process_session.set_coefficient('GAMMA', json.dumps(B))
+dyn_process_session.set_coefficient('B', json.dumps(B))
 dyn_process_session.set_coefficient('C', json.dumps(C))
 dyn_process_session.get_output()
 
@@ -110,7 +110,7 @@ while(True):
     print('------------------')
     y = dyn_process_session.get_output()
     print('y: {}'.format(y))
-    y = np.matrix(y).transpose()
+    y = matrix(y).transpose()
     u = controller.get_control_signal(y)
     dyn_process_session.set_input(np_to_json(u))
     time.sleep(1)

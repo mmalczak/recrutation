@@ -2,6 +2,10 @@ import random
 import string
 import cherrypy
 import numpy as np
+from numpy import matrix
+from numpy import dot
+from numpy import zeros
+from numpy import transpose
 import json
 
 
@@ -18,20 +22,23 @@ class DynamicProcess():
         self.__zero_init()
 
     def __zero_init(self):
-        self.__y = np.zeros([self.dimension])
-        self.__x = np.zeros([self.dimension])
+        self.__y = transpose(matrix(zeros([self.dimension])))
+        self.__x = transpose(matrix(zeros([self.dimension])))
 
-        self.coeff = {'A': np.zeros([self.dimension, self.dimension]),
-                      'GAMMA': np.transpose(np.matrix(np.zeros([self.dimension]))),
-                      'C': np.zeros([self.dimension, self.dimension])
+
+        self.coeff = {'A': zeros([self.dimension, self.dimension]),
+                      'B': transpose(matrix(zeros([self.dimension]))),
+                      'C': zeros([self.dimension, self.dimension])
                       }
 
     def set_value(self, u):
-        self.__x = np.dot(self.coeff['A'], self.__x) + np.dot(self.coeff['GAMMA'], u)
+        print("B: {}".format(self.coeff['B']))
+        print("u: {}".format(u))
+        self.__x = dot(self.coeff['A'], self.__x) + dot(self.coeff['B'], u)
         print('state = {}'.format(self.__x))
-        self.__y = np.dot(self.coeff['C'], self.__x) + np.array([np.random.normal(0, 0.1), 0])
+        self.__y = dot(self.coeff['C'], self.__x) + transpose(matrix([np.random.normal(0, 0.1), 0]))
         print('y = {}'.format(self.__y))
-    
+
     def get_value(self):
         return np_to_json(self.__y)
 
@@ -83,9 +90,13 @@ class CoefficientsWebService(object):
 
     def PUT(self, type, value):
         value = json_to_np(value)
-        if np.shape(value) == (self.__dynamic_process.dimension, 
+        if np.shape(value) == (self.__dynamic_process.dimension,
                 self.__dynamic_process.dimension):
             self.__dynamic_process.coeff[type] = value
+        elif np.shape(value) == (1, self.__dynamic_process.dimension):
+            self.__dynamic_process.coeff[type] = transpose(value)
+        else:
+            print("ERROR")
 
 @cherrypy.expose
 class DimensionWebService(object):
