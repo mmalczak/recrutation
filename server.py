@@ -21,12 +21,12 @@ def json_to_np(data):
 
 class DynamicProcess():
     def __init__(self):
-        self.dimension = 2
+        self.num_states = 2
         self.__zero_init()
 
     def __zero_init(self):
         self.__y = 0
-        self.__x = transpose(matrix(zeros([self.dimension])))
+        self.__x = transpose(matrix(zeros([self.num_states])))
 
 
         self.coeff = {'A': None,
@@ -43,8 +43,8 @@ class DynamicProcess():
     def get_value(self):
         return np_to_json(self.__y)
 
-    def set_dimension(self, dimension):
-        self.dimension = dimension
+    def set_num_states(self, num_states):
+        self.num_states = num_states
         self.__zero_init()
 
 
@@ -99,10 +99,10 @@ class DimensionWebService(object):
         self.__dynamic_process = dynamic_process
 
     def GET(self):
-        return str(self.__dynamic_process.dimension)
+        return str(self.__dynamic_process.num_states)
 
     def PUT(self, value):
-        self.__dynamic_process.dimension = int(value)
+        self.__dynamic_process.num_states = int(value)
 
 
 
@@ -123,7 +123,7 @@ if __name__ == '__main__':
                         '/coefficients/', conf)
 
     cherrypy.tree.mount(DimensionWebService(dynamic_process),
-                        '/dimension/', conf)
+                        '/num_states/', conf)
 
 
     cherrypy.engine.start()
