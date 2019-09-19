@@ -30,12 +30,10 @@ class DynamicProcessSession():
 
     def get_output(self):
         r = self.__session.get(self.__address + 'in_out/')
-        print('r.text: {}'.format(r.text))
         return json.loads(r.text)
 
     def set_input(self, value):
         r = self.__session.put(self.__address + 'in_out/', data={'value':value})
-        print(r.text)
 
     def get_coefficient(self, type):
         r = self.__session.get(self.__address + 'coefficients/' + type + '/')
@@ -44,7 +42,6 @@ class DynamicProcessSession():
     def set_coefficient(self, type, value):
         r = self.__session.put(self.__address + 'coefficients/' + type + '/',
                                data={'value':value})
-        print(r.text)
 
     def get_dimension(self):
         r = self.__session.get(self.__address + 'dimension/')
@@ -53,7 +50,6 @@ class DynamicProcessSession():
     def set_dimension(self, value):
         r = self.__session.put(self.__address + 'dimension/',
                                data={'value':value})
-        print(r.text)
 
 class Controller():
     def __init__(self):
