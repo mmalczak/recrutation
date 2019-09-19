@@ -113,6 +113,10 @@ dyn_process_session.set_coefficient('A', json.dumps(A))
 dyn_process_session.set_coefficient('B', json.dumps(B))
 dyn_process_session.set_coefficient('C', json.dumps(C))
 
+W_c = control.ctrb(controller.A, controller.B)
+W_o = control.obsv(controller.A, controller.C)
+print(np.linalg.matrix_rank(W_c))
+print(np.linalg.matrix_rank(W_o))
 
 while(True):
     print('------------------')
