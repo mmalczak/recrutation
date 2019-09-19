@@ -10,6 +10,9 @@ import json
 
 
 def np_to_json(data):
+    if type(data) == int:
+        return json.dumps(data)
+    else:
         return json.dumps(data.tolist())
 
 def json_to_np(data):
@@ -22,7 +25,7 @@ class DynamicProcess():
         self.__zero_init()
 
     def __zero_init(self):
-        self.__y = transpose(matrix(zeros([self.dimension])))
+        self.__y = 0 #transpose(matrix(zeros([self.dimension])))
         self.__x = transpose(matrix(zeros([self.dimension])))
 
 
@@ -32,12 +35,23 @@ class DynamicProcess():
                       }
 
     def set_value(self, u):
+        print('================================================')
         print("B: {}".format(self.coeff['B']))
         print("u: {}".format(u))
-        self.__x = dot(self.coeff['A'], self.__x) + dot(self.coeff['B'], u)
         print('state = {}'.format(self.__x))
-        self.__y = dot(self.coeff['C'], self.__x) + transpose(matrix([np.random.normal(0, 0.1), 0]))
         print('y = {}'.format(self.__y))
+        self.__x = dot(self.coeff['A'], self.__x) + dot(self.coeff['B'], u)
+        print("C: {}".format(self.coeff['C']))
+        print("self.__x: {}".format(self.__x))
+        print("dot: {}".format(self.coeff['C'], self.__x))
+        self.__y = dot(self.coeff['C'], self.__x) + np.random.normal(0, 0.1)
+        print("")
+        print("B: {}".format(self.coeff['B']))
+        print("u: {}".format(u))
+        print('state = {}'.format(self.__x))
+        print('y = {}'.format(self.__y))
+        print('================================================')
+
 
     def get_value(self):
         return np_to_json(self.__y)
@@ -71,12 +85,13 @@ class MeasureControlWebService(object):
         self.controller = Controller(dynamic_process)
 
     def GET(self):
+        print(self.measurement.read_value())
         return self.measurement.read_value()
 
     def PUT(self, value):
         u = json_to_np(value)
-        if np.shape(u)==(1, self.controller.dynamic_process.dimension):
-            self.controller.set_value(u)
+        #if np.shape(u)==(1, self.controller.dynamic_process.dimension):
+        self.controller.set_value(u)
 
 @cherrypy.expose
 class CoefficientsWebService(object):
@@ -90,13 +105,9 @@ class CoefficientsWebService(object):
 
     def PUT(self, type, value):
         value = json_to_np(value)
-        if np.shape(value) == (self.__dynamic_process.dimension,
-                self.__dynamic_process.dimension):
-            self.__dynamic_process.coeff[type] = value
-        elif np.shape(value) == (1, self.__dynamic_process.dimension):
-            self.__dynamic_process.coeff[type] = transpose(value)
-        else:
-            print("ERROR")
+        if type == 'B':
+            value = transpose(value)
+        self.__dynamic_process.coeff[type] = value
 
 @cherrypy.expose
 class DimensionWebService(object):

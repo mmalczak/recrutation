@@ -11,7 +11,11 @@ import control
 
 
 def np_to_json(data):
+    if type(data) == int:
+        return json.dumps(data)
+    else:
         return json.dumps(data.tolist())
+
 
 def json_to_np(data):
     return np.matrix(json.loads(data))
@@ -26,6 +30,7 @@ class DynamicProcessSession():
 
     def get_output(self):
         r = self.__session.get(self.__address + 'in_out/')
+        print('r.text: {}'.format(r.text))
         return json.loads(r.text)
 
     def set_input(self, value):
@@ -57,7 +62,7 @@ class Controller():
 
     def __zero_init(self):
         self.x_est = matrix(zeros([self.dimension])).transpose()
-        self.u = matrix(zeros([self.dimension]))
+        self.u = 0 #matrix(zeros([self.dimension]))
         self.K = matrix(zeros([self.dimension, self.dimension]))
         self.A = matrix(zeros([self.dimension, self.dimension]))
         self.B = matrix(zeros([self.dimension]))
@@ -67,11 +72,15 @@ class Controller():
 
     """OBSERVER"""
     def get_est_state(self, y):
-        L = scipy.signal.place_poles(transpose(self.A), transpose(self.C), [0, 0]).gain_matrix
+        L = control.acker(transpose(self.A), transpose(self.C), [0, 0])
+        print(L)
+        #L = scipy.signal.place_poles(transpose(self.A), transpose(self.C), [0.5, 0.5]).gain_matrix
         L = transpose(matrix(L))
+
+        print('get state x_est: {}'.format(self.x_est))
         self.x_est = dot(self.A, self.x_est) + dot(self.B, self.u) +\
-                        dot(L, (y-dot(self.C, self.x_est)))
-        print('x_est: {}'.format(self.x_est))
+                         dot(L, (y-dot(self.C, self.x_est)))
+        print('get state x_est: {}'.format(self.x_est))
 
 
     """CONTROLLER"""
@@ -80,6 +89,7 @@ class Controller():
         K = -dot(np.linalg.pinv(self.B), self.A)
         self.get_est_state(y)
         self.u = dot(K, self.x_est)
+        self.u  = self.u
         return self.u
 
     def set_dimension(self, dimension):
@@ -93,9 +103,9 @@ dyn_process_session = DynamicProcessSession()
 controller = Controller()
 dyn_process_session.get_dimension()
 dyn_process_session.set_dimension('2')
-A = [[1, 2],[2, 4]]
+A = [[0.1, 0.2],[0.3, 0.4]]
 B = [1, -1]
-C = [[1, 0],[0, 1]]
+C = [0.6, 0.8]
 D = [[0, 0],[0, 0]]
 controller.A = matrix(A)
 controller.B = matrix(B).transpose()
