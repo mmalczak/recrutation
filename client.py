@@ -68,28 +68,27 @@ class Controller():
 
     """OBSERVER"""
     def get_est_state(self, y):
-        L = control.acker(transpose(self.A), transpose(self.C), [0, 0])
-        print(L)
-        #L = scipy.signal.place_poles(transpose(self.A), transpose(self.C), [0.5, 0.5]).gain_matrix
-        L = transpose(matrix(L))
-
         print('get state x_est: {}'.format(self.x_est))
         self.x_est = dot(self.A, self.x_est) + dot(self.B, self.u) +\
-                         dot(L, (y-dot(self.C, self.x_est)))
+                         dot(self.L, (y-dot(self.C, self.x_est)))
         print('get state x_est: {}'.format(self.x_est))
 
 
     """CONTROLLER"""
     def get_control_signal(self, y, feed_forward):
-        K = -dot(np.linalg.pinv(self.B), self.A)
         self.get_est_state(y)
-        self.u = dot(K, self.x_est)
+        self.u = dot(self.K, self.x_est)
         self.u  = self.u + dot(self.D, feed_forward)
         return self.u
 
     def set_dimension(self, dimension):
         self.dimension = dimension
         self.__zero_init()
+
+    def calculate_observer_controller(self):
+        self.L = control.acker(transpose(self.A), transpose(self.C), [0, 0])
+        self.L = transpose(matrix(self.L))
+        self.K = -dot(np.linalg.pinv(self.B), self.A)
 
 
 
@@ -106,6 +105,7 @@ controller.A = matrix(A)
 controller.B = matrix(B)
 controller.C = matrix(C)
 controller.D = matrix(D)
+controller.calculate_observer_controller()
 feed_forward = 100
 dyn_process_session.set_coefficient('A', json.dumps(A))
 dyn_process_session.set_coefficient('B', json.dumps(B))
