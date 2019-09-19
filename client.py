@@ -54,11 +54,12 @@ class DynamicProcessSession():
 class Controller():
     def __init__(self):
         self.num_states = 2
+        self.num_inputs = 2
         self.__zero_init()
 
     def __zero_init(self):
         self.x_est = matrix(zeros([self.num_states])).transpose()
-        self.u = 0 #matrix(zeros([self.num_states]))
+        self.u = matrix(zeros([self.num_inputs])).transpose()
         self.K = None
         self.A = None
         self.B = None
@@ -68,7 +69,6 @@ class Controller():
 
     """OBSERVER"""
     def get_est_state(self, y):
-        print('get state x_est: {}'.format(self.x_est))
         self.x_est = dot(self.A, self.x_est) + dot(self.B, self.u) +\
                          dot(self.L, (y-dot(self.C, self.x_est)))
         print('get state x_est: {}'.format(self.x_est))
@@ -86,19 +86,21 @@ class Controller():
         self.__zero_init()
 
     def calculate_observer_controller(self):
-        self.L = control.acker(transpose(self.A), transpose(self.C), [0, 0])
+        #self.L = control.acker(transpose(self.A), transpose(self.C), [0, 0])
+        self.L = dot(np.linalg.pinv(transpose(self.C)), transpose(self.A))
         self.L = transpose(matrix(self.L))
         self.K = -dot(np.linalg.pinv(self.B), self.A)
-
 
 
 num_states = 2
 feed_forward = 100
 A = [[0.1, 0.2],
      [0.3, 0.4]]
-B = [[1],
-     [-1]]
-C = [0.6, 0.8]
+B = [[1, 0.5],
+     [-1, -0.3]]
+C = [[0.6, 0.8],
+     [0.5, 0.4]
+    ]
 D = [1]
 controller = Controller()
 controller.set_num_states(num_states)
@@ -122,9 +124,9 @@ while(True):
     print('------------------')
     y = dyn_process_session.get_output()
     print('y: {}'.format(y))
-    y = matrix(y).transpose()
     u = controller.get_control_signal(y, feed_forward)
+    #print("sterowanie: {}".format(u))
     dyn_process_session.set_input(np_to_json(u))
     time.sleep(0.1)
-
+    print("====================================")
 

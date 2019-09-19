@@ -22,10 +22,11 @@ def json_to_np(data):
 class DynamicProcess():
     def __init__(self):
         self.num_states = 2
+        self.num_outputs = 2
         self.__zero_init()
 
     def __zero_init(self):
-        self.__y = 0
+        self.__y = transpose(matrix(zeros([self.num_outputs])))
         self.__x = transpose(matrix(zeros([self.num_states])))
 
 
@@ -39,6 +40,7 @@ class DynamicProcess():
         self.__y = dot(self.coeff['C'], self.__x) + np.random.normal(0, 0.1)
         print("state: {}".format(self.__x))
         print("out: {}".format(self.__y))
+        print("=================================================")
 
     def get_value(self):
         return np_to_json(self.__y)
