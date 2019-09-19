@@ -26,7 +26,7 @@ class DynamicProcessSession():
     def __init__(self):
         self.__session = requests.Session()
         self.__address = 'http://20.0.0.2:8080/'
-        self.__dimension = 2
+        self.__num_states = 2
 
     def get_output(self):
         r = self.__session.get(self.__address + 'in_out/')
@@ -43,22 +43,22 @@ class DynamicProcessSession():
         r = self.__session.put(self.__address + 'coefficients/' + type + '/',
                                data={'value':value})
 
-    def get_dimension(self):
-        r = self.__session.get(self.__address + 'dimension/')
+    def get_num_states(self):
+        r = self.__session.get(self.__address + 'num_states/')
         print(r.text)
 
-    def set_dimension(self, value):
-        r = self.__session.put(self.__address + 'dimension/',
+    def set_num_states(self, value):
+        r = self.__session.put(self.__address + 'num_states/',
                                data={'value':value})
 
 class Controller():
     def __init__(self):
-        self.dimension = 2
+        self.num_states = 2
         self.__zero_init()
 
     def __zero_init(self):
-        self.x_est = matrix(zeros([self.dimension])).transpose()
-        self.u = 0 #matrix(zeros([self.dimension]))
+        self.x_est = matrix(zeros([self.num_states])).transpose()
+        self.u = 0 #matrix(zeros([self.num_states]))
         self.K = None
         self.A = None
         self.B = None
@@ -81,8 +81,8 @@ class Controller():
         self.u  = self.u + dot(self.D, feed_forward)
         return self.u
 
-    def set_dimension(self, dimension):
-        self.dimension = dimension
+    def set_num_states(self, num_states):
+        self.num_states = num_states
         self.__zero_init()
 
     def calculate_observer_controller(self):
@@ -95,8 +95,8 @@ class Controller():
 
 dyn_process_session = DynamicProcessSession()
 controller = Controller()
-dyn_process_session.get_dimension()
-dyn_process_session.set_dimension('2')
+dyn_process_session.get_num_states()
+dyn_process_session.set_num_states('2')
 A = [[0.1, 0.2],[0.3, 0.4]]
 B = [[1], [-1]]
 C = [0.6, 0.8]
