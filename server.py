@@ -25,13 +25,13 @@ class DynamicProcess():
         self.__zero_init()
 
     def __zero_init(self):
-        self.__y = 0 
+        self.__y = 0
         self.__x = transpose(matrix(zeros([self.dimension])))
 
 
-        self.coeff = {'A': zeros([self.dimension, self.dimension]),
-                      'B': transpose(matrix(zeros([self.dimension]))),
-                      'C': zeros([self.dimension, self.dimension])
+        self.coeff = {'A': None,
+                      'B': None,
+                      'C': None,
                       }
 
     def set_value(self, u):
@@ -70,7 +70,6 @@ class MeasureControlWebService(object):
         self.controller = Controller(dynamic_process)
 
     def GET(self):
-        print(self.measurement.read_value())
         return self.measurement.read_value()
 
     def PUT(self, value):
