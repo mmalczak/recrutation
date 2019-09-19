@@ -94,8 +94,10 @@ class Controller():
 
 num_states = 2
 feed_forward = 100
-A = [[0.1, 0.2],[0.3, 0.4]]
-B = [[1], [-1]]
+A = [[0.1, 0.2],
+     [0.3, 0.4]]
+B = [[1],
+     [-1]]
 C = [0.6, 0.8]
 D = [1]
 controller = Controller()
