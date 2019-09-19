@@ -93,7 +93,7 @@ class CoefficientsWebService(object):
         self.__dynamic_process.coeff[type] = value
 
 @cherrypy.expose
-class DimensionWebService(object):
+class NumStatesWebService(object):
 
     def __init__(self, dynamic_process):
         self.__dynamic_process = dynamic_process
@@ -122,7 +122,7 @@ if __name__ == '__main__':
     cherrypy.tree.mount(CoefficientsWebService(dynamic_process),
                         '/coefficients/', conf)
 
-    cherrypy.tree.mount(DimensionWebService(dynamic_process),
+    cherrypy.tree.mount(NumStatesWebService(dynamic_process),
                         '/num_states/', conf)
 
 
