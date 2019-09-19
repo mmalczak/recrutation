@@ -110,7 +110,7 @@ dyn_process_session.set_num_states(str(num_states))
 dyn_process_session.set_coefficient('A', json.dumps(A))
 dyn_process_session.set_coefficient('B', json.dumps(B))
 dyn_process_session.set_coefficient('C', json.dumps(C))
-dyn_process_session.get_output()
+
 
 while(True):
     print('------------------')
