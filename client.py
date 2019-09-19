@@ -103,11 +103,11 @@ controller = Controller()
 dyn_process_session.get_dimension()
 dyn_process_session.set_dimension('2')
 A = [[0.1, 0.2],[0.3, 0.4]]
-B = [1, -1]
+B = [[1], [-1]]
 C = [0.6, 0.8]
 D = [1]
 controller.A = matrix(A)
-controller.B = matrix(B).transpose()
+controller.B = matrix(B)
 controller.C = matrix(C)
 controller.D = matrix(D)
 feed_forward = 100

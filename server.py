@@ -89,8 +89,6 @@ class CoefficientsWebService(object):
 
     def PUT(self, type, value):
         value = json_to_np(value)
-        if type == 'B':
-            value = transpose(value)
         self.__dynamic_process.coeff[type] = value
 
 @cherrypy.expose
