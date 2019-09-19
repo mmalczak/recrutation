@@ -84,12 +84,11 @@ class Controller():
 
 
     """CONTROLLER"""
-    def get_control_signal(self, y):
-        #K = -scipy.signal.place_poles(np.array(self.A), np.array(self.B), [0, 0]).gain_matrix
+    def get_control_signal(self, y, feed_forward):
         K = -dot(np.linalg.pinv(self.B), self.A)
         self.get_est_state(y)
         self.u = dot(K, self.x_est)
-        self.u  = self.u
+        self.u  = self.u + dot(self.D, feed_forward)
         return self.u
 
     def set_dimension(self, dimension):
@@ -106,11 +105,12 @@ dyn_process_session.set_dimension('2')
 A = [[0.1, 0.2],[0.3, 0.4]]
 B = [1, -1]
 C = [0.6, 0.8]
-D = [[0, 0],[0, 0]]
+D = [1]
 controller.A = matrix(A)
 controller.B = matrix(B).transpose()
 controller.C = matrix(C)
 controller.D = matrix(D)
+feed_forward = 100
 dyn_process_session.set_coefficient('A', json.dumps(A))
 dyn_process_session.set_coefficient('B', json.dumps(B))
 dyn_process_session.set_coefficient('C', json.dumps(C))
@@ -121,8 +121,8 @@ while(True):
     y = dyn_process_session.get_output()
     print('y: {}'.format(y))
     y = matrix(y).transpose()
-    u = controller.get_control_signal(y)
+    u = controller.get_control_signal(y, feed_forward)
     dyn_process_session.set_input(np_to_json(u))
-    time.sleep(1)
+    time.sleep(0.1)
 
 
