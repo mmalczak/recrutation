@@ -19,11 +19,17 @@ def json_to_np(data):
     return np.matrix(json.loads(data))
 
 
+def unity(x):
+    return x
+
 class DynamicProcess():
     def __init__(self):
+        #self.nonlinearity = np.sin
+        self.nonlinearity = unity
         self.num_states = 2
         self.num_outputs = 2
         self.__zero_init()
+
 
     def __zero_init(self):
         self.__y = transpose(matrix(zeros([self.num_outputs])))
@@ -35,9 +41,10 @@ class DynamicProcess():
                       'C': None,
                       }
 
+
     def set_value(self, u):
         self.__x = dot(self.coeff['A'], self.__x) + dot(self.coeff['B'], u)
-        self.__y = dot(self.coeff['C'], self.__x) + np.random.normal(0, 0.1)
+        self.__y = dot(self.coeff['C'], self.nonlinearity(self.__x)) + np.random.normal(0, 0.1)
         print("state: {}".format(self.__x))
         print("out: {}".format(self.__y))
         print("=================================================")
