@@ -26,7 +26,6 @@ class DynamicProcessSession():
     def __init__(self):
         self.__session = requests.Session()
         self.__address = 'http://20.0.0.2:8080/'
-        self.__num_states = 2
 
     def get_output(self):
         r = self.__session.get(self.__address + 'in_out/')
@@ -53,7 +52,7 @@ class DynamicProcessSession():
 
 class Controller():
     def __init__(self):
-        self.num_states = 2
+        self.num_states = 3
         self.num_inputs = 2
         self.__zero_init()
 
@@ -92,14 +91,18 @@ class Controller():
         self.K = -dot(np.linalg.pinv(self.B), self.A)
 
 
-num_states = 2
+num_states = 3
 feed_forward = 100
-A = [[0.1, 0.2],
-     [0.3, 0.4]]
+A = [[0.1, 0.2, 0.3],
+     [0.3, 0.4, 0.1],
+     [0.2, 0.7, 0.4]
+    ]
 B = [[1, 0.5],
-     [-1, -0.3]]
-C = [[0.6, 0.8],
-     [0.5, 0.4]
+     [-1, -0.3],
+     [0.2, 0.1]
+    ]
+C = [[0.6, 0.8, 0.7],
+     [0.5, 0.4, 0.2]
     ]
 D = [1]
 controller = Controller()
