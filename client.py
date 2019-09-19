@@ -92,21 +92,21 @@ class Controller():
 
 
 
-
+num_states = 2
 feed_forward = 100
 A = [[0.1, 0.2],[0.3, 0.4]]
 B = [[1], [-1]]
 C = [0.6, 0.8]
 D = [1]
 controller = Controller()
-controller.set_num_states(2)
+controller.set_num_states(num_states)
 controller.A = matrix(A)
 controller.B = matrix(B)
 controller.C = matrix(C)
 controller.D = matrix(D)
 controller.calculate_observer_controller()
 dyn_process_session = DynamicProcessSession()
-dyn_process_session.set_num_states('2')
+dyn_process_session.set_num_states(str(num_states))
 dyn_process_session.set_coefficient('A', json.dumps(A))
 dyn_process_session.set_coefficient('B', json.dumps(B))
 dyn_process_session.set_coefficient('C', json.dumps(C))
