@@ -32,6 +32,7 @@ Vagrant.configure("2") do |config|
 #    end  
 #
     config.vm.define :snort do |snort|
+        snort.vm.provision :shell, path: "snort_conf.sh"
         snort.vm.network "private_network", ip: "30.0.0.2"
     end
 #
