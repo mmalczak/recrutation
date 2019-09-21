@@ -21,9 +21,11 @@ Vagrant.configure("2") do |config|
 
     config.vm.define :fw_router do |fw_router|
         fw_router.vm.provision :shell, path: "port_mirror.sh"
-        fw_router.vm.network "private_network", ip: "10.0.0.99"
-        fw_router.vm.network "private_network", ip: "20.0.0.99"
-        fw_router.vm.network "private_network", ip: "30.0.0.99"
+        fw_router.vm.provision :shell, path: "bootstrap.sh"
+        fw_router.vm.network "private_network", ip: "10.0.0.99" # routing
+        fw_router.vm.network "private_network", ip: "20.0.0.99" # routing
+        fw_router.vm.network "private_network", ip: "30.0.0.99" # traffic copy
+        fw_router.vm.network "private_network", ip: "40.0.0.99" # snort notiffications
         fw_router.vm.provision "shell",
             inline: "sysctl -w net.ipv4.ip_forward=1"
     end
@@ -36,8 +38,10 @@ Vagrant.configure("2") do |config|
     end
 
     config.vm.define :snort do |snort|
+        snort.vm.provision :shell, path: "bootstrap.sh"
         snort.vm.provision :shell, path: "snort_conf.sh"
         snort.vm.network "private_network", ip: "30.0.0.2"
+        snort.vm.network "private_network", ip: "40.0.0.2"
     end
 #
 #    config.vm.define :db do |db|

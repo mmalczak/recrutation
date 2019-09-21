@@ -35,4 +35,6 @@ sudo chown -R vagrant:vagrant /var/log/snort
 sudo chown -R vagrant:vagrant /usr/local/lib/snort_dynamicrules
 
 echo 'include /etc/snort/rules/icmp.rules' >> /etc/snort/snort.conf
-echo 'alert icmp any any -> any any (msg:"ICMP Packet"; sid:477; rev:3;)' >> /etc/snort/rules/icmp.rules
+#echo 'alert icmp any any -> any any (msg:"ICMP Packet"; sid:477; rev:3;)' >> /etc/snort/rules/icmp.rules
+echo 'alert tcp  any any -> 20.0.0.0/24 any (msg:"Possible TCP DoS"; threshold: type both, track by_src, count 200, seconds 3; sid:10;rev:1;)' >>  /etc/snort/rules/icmp.rules
+
