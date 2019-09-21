@@ -27,9 +27,9 @@ class DynamicProcessSession():
         self.__session = requests.Session()
         self.__address = 'http://20.0.0.2:8080/'
 
-    def set_nonexistent(self):
+    def set_nonexistent(self, data):
         self.__session.put(self.__address + 'nonexistent/', 
-			   data={'value':"nonexistent"})
+			   data={'value':data})
 
     def get_output(self):
         r = self.__session.get(self.__address + 'in_out/')
@@ -129,10 +129,33 @@ dyn_process_session = DynamicProcessSession()
 #y = dyn_process_session.get_output()
 #print('y: {}'.format(y))
 #u = controller.get_control_signal(y, feed_forward)
-
+data = "1110010"
+data = 10000000*data
 while(True):
-    dyn_process_session.set_nonexistent()
-#    dyn_process_session.set_input(np_to_json(np.matrix([[0],[0]])))
+#    dyn_process_session.set_nonexistent(data)
+    dyn_process_session.set_input(np_to_json(np.matrix([[1000000.03532324],
+							[1000000.03532324]])))
+    print(time.perf_counter())
+#    dyn_process_session.set_input(np_to_json(np.matrix([[1000000.03532324],
+#    							[1000000*'a'],
+#    							[1000000*'a'],
+#    							[1000000*'a'],
+#    							[1000000*'a'],
+#    							[1000000*'a'],
+#    							[1000000*'a'],
+#    							[1000000*'a'],
+#    							[1000000*'a'],
+#    							[1000000*'a'],
+#    							[1000000*'a'],
+#    							[1000000*'a'],
+#    							[1000000*'a'],
+#    							[1000000*'a'],
+#    							[1000000*'a'],
+#    							[1000000*'a'],
+#    							[1000000*'a']
+#                                                        ])))
+#    time.sleep(1)
+    							#[1000000.23533432]])))
 #    dyn_process_session.set_input(np_to_json(np.matrix([[0],[0],[0],[0]])))
 #    dyn_process_session.set_input(np_to_json())
 #while(True):
