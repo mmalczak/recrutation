@@ -9,8 +9,6 @@ import os
 class FirewallWebService(object):
 
     def PUT(self, value):
-        print("bleble")
-        print(value)
         os.system('iptables -A FORWARD -s ' + value + ' -j DROP') 
 
 if __name__ == '__main__':
