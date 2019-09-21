@@ -123,7 +123,17 @@ W_o = control.obsv(controller.A, controller.C)
 print(np.linalg.matrix_rank(W_c))
 print(np.linalg.matrix_rank(W_o))
 
+t0 = time.perf_counter()
+freq_counter = 0
+freq = 0
 while(True):
+    freq_counter += 1
+    t = time.perf_counter()
+    if (t - t0) > 1:
+        freq = freq_counter
+        freq_counter = 0
+        t0 = t
+    print("freq: {}".format(freq))
     print('------------------')
     y = dyn_process_session.get_output()
     print('y: {}'.format(y))
