@@ -11,5 +11,14 @@ snort_process = Popen(['snort', '-dev', '-i', 'enp0s8',
 with snort_process.stdout:
     for line in iter(snort_process.stdout.readline, ''):
         if 'Possible TCP DoS' in line:
-            print(line, end='')
+            elements = line.split()
+            if '{TCP}' in elements:
+                pos = elements.index('{TCP}') + 1
+                ip = elements[pos]
+                ip = ip.split(':')[0]
+                ip = ip.split('.')
+                ip = ip[0] + '.' + ip[1] + '.' + ip[2] + '.' + '0/24'
+
+                print(ip)
+                print(line, end='')
 rc = snort_process.wait()
