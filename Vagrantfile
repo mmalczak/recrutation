@@ -87,6 +87,8 @@ Vagrant.configure("2") do |config|
         snort.vm.network "private_network", ip: "40.0.0.2"
         snort.vm.provision "shell",
             inline: "python3.6 -m pip install requests" 
+        snort.vm.provision "shell",
+            inline: "python3.6 -m pip install pymongo" 
     end
 
     config.vm.define :db do |db|
