@@ -60,25 +60,25 @@ Vagrant.configure("2") do |config|
 
     end
 
-#    config.vm.define :zaklocenie2 do |zaklocenie2|
-#        zaklocenie2.vm.provision :shell, path: "bootstrap.sh"
-#        zaklocenie2.vm.network "private_network", ip: "10.0.0.7"
-#        zaklocenie2.vm.provision "shell",
-#            inline: "sudo ip route add 20.0.0.0/24 via 10.0.0.99"
-#        zaklocenie2.vm.provision "shell",
-#            inline: "python3.6 -m pip install requests" 
-#
-#    end
-#
-#    config.vm.define :zaklocenie3 do |zaklocenie3|
-#        zaklocenie3.vm.provision :shell, path: "bootstrap.sh"
-#        zaklocenie3.vm.network "private_network", ip: "10.0.0.8"
-#        zaklocenie3.vm.provision "shell",
-#            inline: "sudo ip route add 20.0.0.0/24 via 10.0.0.99"
-#        zaklocenie3.vm.provision "shell",
-#            inline: "python3.6 -m pip install requests" 
-#
-#    end
+    config.vm.define :zaklocenie2 do |zaklocenie2|
+        zaklocenie2.vm.provision :shell, path: "bootstrap.sh"
+        zaklocenie2.vm.network "private_network", ip: "10.0.0.7"
+        zaklocenie2.vm.provision "shell",
+            inline: "sudo ip route add 20.0.0.0/24 via 10.0.0.99"
+        zaklocenie2.vm.provision "shell",
+            inline: "python3.6 -m pip install requests" 
+
+    end
+
+    config.vm.define :zaklocenie3 do |zaklocenie3|
+        zaklocenie3.vm.provision :shell, path: "bootstrap.sh"
+        zaklocenie3.vm.network "private_network", ip: "10.0.0.8"
+        zaklocenie3.vm.provision "shell",
+            inline: "sudo ip route add 20.0.0.0/24 via 10.0.0.99"
+        zaklocenie3.vm.provision "shell",
+            inline: "python3.6 -m pip install requests" 
+
+    end
 
     config.vm.define :snort do |snort|
         snort.vm.provision :shell, path: "bootstrap.sh"
@@ -88,9 +88,15 @@ Vagrant.configure("2") do |config|
         snort.vm.provision "shell",
             inline: "python3.6 -m pip install requests" 
     end
-#
-#    config.vm.define :db do |db|
-#    end
+
+    config.vm.define :db do |db|
+        db.vm.provision :shell, path: "bootstrap.sh"
+        db.vm.network "private_network", ip: "40.0.0.3"
+        db.vm.provision :shell, path: "db_conf.sh"
+        db.vm.provision "shell",
+            inline: "python3.6 -m pip install pymongo" 
+
+    end
 
 
 

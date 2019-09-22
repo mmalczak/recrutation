@@ -1,5 +1,7 @@
 from subprocess import Popen, PIPE, STDOUT
 import requests
+import pymongo
+
 
 class FirewallSession():
 
@@ -7,11 +9,14 @@ class FirewallSession():
         self.__session = requests.Session()
         self.__address = 'http://40.0.0.99:8080/'
 
-    def set_IP(self, value):
+    def block_IP(self, value):
         r = self.__session.put(self.__address + 'blocked_IPs/', data={'value':value})
 
 
 firewall_session = FirewallSession()
+
+mongo_client = pymongo.MongoClient("mongodb://milosz:milosz@40.0.0.3/snort_db")
+
 
 snort_process = Popen(['snort', '-dev', '-i', 'enp0s8',
                        '-c', '/etc/snort/snort.conf', '-A', 'console'],
@@ -29,7 +34,8 @@ with snort_process.stdout:
                 ip = ip + '/32'
 #                ip = ip.split('.')
 #                ip = ip[0] + '.' + ip[1] + '.' + ip[2] + '.' + '0/24'
-                firewall_session.set_IP(ip)
+                firewall_session.block_IP(ip)
                 print(ip)
                 print(line, end='')
+                mongo_client.snort_db.blocked_addresses.insert_one({'ip':ip}) 
 rc = snort_process.wait()
