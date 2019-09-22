@@ -43,24 +43,23 @@ data = '[' + data + '], '
 last_data = '[' + data + ']'
 while(True):
 #    dyn_process_session.set_nonexistent(data)
-    #dyn_process_session.set_input("[[1000000.03532324], " + 
-    dyn_process_session.set_input("[[bleble.03532324], " + 
-                                    data +
-                                    data +
-                                    data +
-                                    data +
-                                    data +
-                                    data +
-                                    data +
-                                    data +
-                                    data +
-                                    data +
-                                    data +
-                                    last_data +
-                                    ']')
-                                    
+    dyn_process_session.set_input("[[1000000.03532324], [2]]") 
+#    dyn_process_session.set_input("[[bleble.03532324], " + 
+#                                    data +
+#                                    data +
+#                                    data +
+#                                    data +
+#                                    data +
+#                                    data +
+#                                    data +
+#                                    data +
+#                                    data +
+#                                    data +
+#                                    data +
+#                                    last_data +
+#                                    ']')
+#                                    
                             
                                                         #['a']]")
 							#[1000000.03532324]])))
     print(time.perf_counter())
-    time.sleep(1)
