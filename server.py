@@ -8,6 +8,12 @@ from numpy import zeros
 from numpy import transpose
 import json
 
+from flask import Flask, request
+from flask_restplus import Resource, Api
+
+app = Flask(__name__)
+api = Api(app)
+
 
 def np_to_json(data):
     if type(data) == int:
@@ -73,67 +79,43 @@ class Controller():
         self.dynamic_process.set_value(value)
 
 
-@cherrypy.expose
-class MeasureControlWebService(object):
+dynamic_process = DynamicProcess()
+measurement = Measurement(dynamic_process)
+controller = Controller(dynamic_process)
 
-    def __init__(self, dynamic_process):
-        self.measurement = Measurement(dynamic_process)
-        self.controller = Controller(dynamic_process)
 
-    def GET(self):
-        return self.measurement.read_value()
+@api.route('/in_out')
+class MeasureControlWebService(Resource):
 
-    def PUT(self, value):
+    def get(self):
+        return measurement.read_value()
+
+    def put(self):
+        value = request.form['data']
         u = json_to_np(value)
-        self.controller.set_value(u)
+        controller.set_value(u)
 
-@cherrypy.expose
-class CoefficientsWebService(object):
+@api.route('/coefficients/<string:type>')
+class CoefficientsWebService(Resource):
 
-    def __init__(self, dynamic_process):
-        self.__dynamic_process = dynamic_process
-
-    def GET(self, type):
-        coeff = self.__dynamic_process.coeff[type]
+    def get(self, type):
+        coeff = dynamic_process.coeff[type]
         return np_to_json(coeff)
 
-    def PUT(self, type, value):
+    def put(self, type):
+        value = request.form['data']
         value = json_to_np(value)
-        self.__dynamic_process.coeff[type] = value
+        dynamic_process.coeff[type] = value
 
-@cherrypy.expose
-class NumStatesWebService(object):
+@api.route('/num_states')
+class NumStatesWebService(Resource):
 
-    def __init__(self, dynamic_process):
-        self.__dynamic_process = dynamic_process
+    def get(self):
+        return str(dynamic_process.num_states)
 
-    def GET(self):
-        return str(self.__dynamic_process.num_states)
-
-    def PUT(self, value):
-        self.__dynamic_process.set_num_states(int(value))
-
-
+    def put(self):
+        num_states = request.form['data']
+        dynamic_process.set_num_states(int(num_states))
 
 if __name__ == '__main__':
-    dynamic_process = DynamicProcess()
-    conf = {
-        '/': {
-            'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
-            'tools.sessions.on': True,
-            'tools.response_headers.on': True,
-            'tools.response_headers.headers': [('Content-Type', 'text/plain')],
-        }
-    }
-    cherrypy.server.socket_host = '20.0.0.2'
-    cherrypy.tree.mount(MeasureControlWebService(dynamic_process), '/in_out/',
-                        conf)
-    cherrypy.tree.mount(CoefficientsWebService(dynamic_process),
-                        '/coefficients/', conf)
-
-    cherrypy.tree.mount(NumStatesWebService(dynamic_process),
-                        '/num_states/', conf)
-
-
-    cherrypy.engine.start()
-    cherrypy.engine.block()
+    app.run(host='20.0.0.2')
