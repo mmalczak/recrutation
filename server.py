@@ -117,5 +117,11 @@ class NumStatesWebService(Resource):
         num_states = request.form['data']
         dynamic_process.set_num_states(int(num_states))
 
+app.config["SERVER_NAME"] = "20.0.0.2:5000"
+app.app_context().__enter__()
+with open('server_API.json', 'w') as file:
+    file.write(json.dumps(api.__schema__, indent=2))
+    file.close()
+
 if __name__ == '__main__':
     app.run(host='20.0.0.2')
