@@ -1,0 +1,111 @@
+{
+  "swagger": "2.0",
+  "basePath": "/",
+  "paths": {
+    "/coefficients/{type}": {
+      "parameters": [
+        {
+          "name": "type",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "get_coefficients_web_service",
+        "tags": [
+          "default"
+        ]
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "put_coefficients_web_service",
+        "tags": [
+          "default"
+        ]
+      }
+    },
+    "/in_out": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "get_measure_control_web_service",
+        "tags": [
+          "default"
+        ]
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "put_measure_control_web_service",
+        "tags": [
+          "default"
+        ]
+      }
+    },
+    "/num_states": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "get_num_states_web_service",
+        "tags": [
+          "default"
+        ]
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "put_num_states_web_service",
+        "tags": [
+          "default"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "API",
+    "version": "1.0"
+  },
+  "produces": [
+    "application/json"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "tags": [
+    {
+      "name": "default",
+      "description": "Default namespace"
+    }
+  ],
+  "responses": {
+    "ParseError": {
+      "description": "When a mask can't be parsed"
+    },
+    "MaskError": {
+      "description": "When any error occurs on mask"
+    }
+  },
+  "host": "20.0.0.2:5000"
+}
