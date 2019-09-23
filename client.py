@@ -29,7 +29,8 @@ class DynamicProcessSession():
 
     def get_output(self):
         r = self.__session.get(self.__address + 'in_out')
-        return json.loads(r.text)
+        data = r.json()
+        return json_to_np(data) 
 
     def set_input(self, value):
         r = self.__session.put(self.__address + 'in_out', data={'data':value})
