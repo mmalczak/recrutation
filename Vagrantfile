@@ -30,12 +30,15 @@ Vagrant.configure("2") do |config|
         server.vm.provision "shell",
             inline: "sudo ip route add 10.0.0.0/24 via 20.0.0.99"
         server.vm.provision "shell",
-            inline: "python3.6 -m pip install cherrypy"
+            inline: "python3.6 -m pip install flask"
+        server.vm.provision "shell",
+            inline: "python3.6 -m pip install flask_restplus"
         server.vm.provision "shell",
             inline: "python3.6 -m pip install numpy" 
         server.vm.provision "shell",
             inline: "python3.6 -m pip install control" 
     end
+
 
     config.vm.define :fw_router do |fw_router|
         fw_router.vm.provision :shell, path: "port_mirror.sh"
