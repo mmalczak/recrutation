@@ -5,6 +5,7 @@
     "/coefficients/{type}": {
       "parameters": [
         {
+          "description": "Name of the matrix to modify",
           "name": "type",
           "in": "path",
           "required": true,
@@ -29,6 +30,14 @@
           }
         },
         "operationId": "put_coefficients_web_service",
+        "parameters": [
+          {
+            "description": "Values of the requested matrix",
+            "name": "coeff",
+            "type": "string",
+            "in": "query"
+          }
+        ],
         "tags": [
           "default"
         ]
@@ -53,6 +62,14 @@
           }
         },
         "operationId": "put_delay_web_service",
+        "parameters": [
+          {
+            "description": "Delay of the output of the dynamic process in                               number of samples",
+            "name": "delay",
+            "type": "string",
+            "in": "query"
+          }
+        ],
         "tags": [
           "default"
         ]
@@ -77,6 +94,14 @@
           }
         },
         "operationId": "put_error_mu_web_service",
+        "parameters": [
+          {
+            "description": "Value of the expectation of the normal distribution                            of the noise added to the output of the dynamic                            process",
+            "name": "mu",
+            "type": "string",
+            "in": "query"
+          }
+        ],
         "tags": [
           "default"
         ]
@@ -101,23 +126,20 @@
           }
         },
         "operationId": "put_error_sigma_web_service",
+        "parameters": [
+          {
+            "description": "Value of the standard deviation of the normal                               distribution of the noise added to the output of                               the dynamic process",
+            "name": "sigma",
+            "type": "string",
+            "in": "query"
+          }
+        ],
         "tags": [
           "default"
         ]
       }
     },
     "/in_out": {
-      "post": {
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "operationId": "post_measure_control_web_service",
-        "tags": [
-          "default"
-        ]
-      },
       "get": {
         "responses": {
           "200": {
@@ -125,6 +147,25 @@
           }
         },
         "operationId": "get_measure_control_web_service",
+        "tags": [
+          "default"
+        ]
+      },
+      "post": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "post_measure_control_web_service",
+        "parameters": [
+          {
+            "description": "The signal used to control the dynamic                                        process",
+            "name": "control_signal",
+            "type": "string",
+            "in": "query"
+          }
+        ],
         "tags": [
           "default"
         ]
@@ -138,6 +179,14 @@
           }
         },
         "operationId": "put_nonlinearity_web_service",
+        "parameters": [
+          {
+            "description": "The function used to introduce the                                      nonlinearity in the system. Available                                      values: unity, sin, pow2, pow3, exp",
+            "name": "nonlinearity",
+            "type": "string",
+            "in": "query"
+          }
+        ],
         "tags": [
           "default"
         ]
@@ -162,6 +211,14 @@
           }
         },
         "operationId": "put_num_outputs_web_service",
+        "parameters": [
+          {
+            "description": "Number of outputs/inputs of the dynamic                                     process",
+            "name": "num_outputs",
+            "type": "string",
+            "in": "query"
+          }
+        ],
         "tags": [
           "default"
         ]
@@ -186,6 +243,14 @@
           }
         },
         "operationId": "put_num_states_web_service",
+        "parameters": [
+          {
+            "description": "Number of states in the dynamic process",
+            "name": "num_states",
+            "type": "string",
+            "in": "query"
+          }
+        ],
         "tags": [
           "default"
         ]
@@ -193,8 +258,9 @@
     }
   },
   "info": {
-    "title": "API",
-    "version": "1.0"
+    "title": "Server",
+    "version": "1.0",
+    "description": "Provides an API to control        the dynamic process"
   },
   "produces": [
     "application/json"

@@ -11,8 +11,8 @@ from flask import Flask, request
 from flask_restplus import Resource, Api
 
 app = Flask(__name__)
-api = Api(app)
-
+api = Api(app=app, title='Server', description='Provides an API to control\
+        the dynamic process' )
 
 def np_to_json(data):
     if type(data) == int:
@@ -122,18 +122,22 @@ class MeasureControlWebService(Resource):
     def get(self):
         return measurement.read_value()
 
+    @api.doc(params={'control_signal': 'The signal used to control the dynamic\
+                                        process'})
     def post(self):
         value = request.form['data']
         u = json_to_np(value)
         controller.set_value(u)
 
 @api.route('/coefficients/<string:type>')
+@api.doc(params={'type': 'Name of the matrix to modify'})
 class CoefficientsWebService(Resource):
 
     def get(self, type):
         coeff = dynamic_process.coeff[type]
         return np_to_json(coeff)
 
+    @api.doc(params={'coeff': 'Values of the requested matrix'})
     def put(self, type):
         value = request.form['data']
         value = json_to_np(value)
@@ -145,6 +149,7 @@ class NumStatesWebService(Resource):
     def get(self):
         return str(dynamic_process.num_states)
 
+    @api.doc(params={'num_states': 'Number of states in the dynamic process'})
     def put(self):
         num_states = request.form['data']
         dynamic_process.set_num_states(int(num_states))
@@ -155,6 +160,8 @@ class NumOutputsWebService(Resource):
     def get(self):
         return str(dynamic_process.num_outputs)
 
+    @api.doc(params={'num_outputs': 'Number of outputs/inputs of the dynamic\
+                                     process'})
     def put(self):
         num_outputs= request.form['data']
         dynamic_process.set_num_outputs(int(num_outputs))
@@ -165,6 +172,8 @@ class DelayWebService(Resource):
     def get(self):
         return str(dynamic_process.delay)
 
+    @api.doc(params={'delay': 'Delay of the output of the dynamic process in\
+                               number of samples'})
     def put(self):
         delay = request.form['data']
         dynamic_process.set_delay(int(delay))
@@ -172,6 +181,9 @@ class DelayWebService(Resource):
 @api.route('/nonlinearity')
 class NonlinearityWebService(Resource):
 
+    @api.doc(params={'nonlinearity': 'The function used to introduce the\
+                                      nonlinearity in the system. Available\
+                                      values: unity, sin, pow2, pow3, exp'})
     def put(self):
         nonlinearity = request.form['data']
         dynamic_process.set_nonlinearity(nonlinearity)
@@ -182,6 +194,9 @@ class ErrorMuWebService(Resource):
     def get(self):
         return str(dynamic_process.error_dist_mu)
 
+    @api.doc(params={'mu': 'Value of the expectation of the normal distribution\
+                            of the noise added to the output of the dynamic\
+                            process'})
     def put(self):
         mu = request.form['data']
         dynamic_process.error_dist_mu = float(mu)
@@ -192,6 +207,9 @@ class ErrorSigmaWebService(Resource):
     def get(self):
         return str(dynamic_process.error_dist_sigma)
 
+    @api.doc(params={'sigma': 'Value of the standard deviation of the normal\
+                               distribution of the noise added to the output of\
+                               the dynamic process'})
     def put(self):
         sigma = request.form['data']
         dynamic_process.error_dist_sigma = float(sigma)
