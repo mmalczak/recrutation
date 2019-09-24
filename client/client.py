@@ -9,6 +9,8 @@ from numpy import zeros
 from numpy import transpose
 import scipy.signal
 import control
+from commands import Commands
+from commands import CommandsThread
 import logging.config
 from logging_conf import DEFAULT_CONFIG
 logging.config.dictConfig(DEFAULT_CONFIG)
@@ -96,7 +98,7 @@ class Controller():
     def get_est_state(self, y):
         self.x_est = dot(self.A, self.x_est) + dot(self.B, self.u) +\
                          dot(self.L, (y-dot(self.C, self.x_est)))
-        print('get state x_est: {}'.format(self.x_est))
+#        print('get state x_est: {}'.format(self.x_est))
 
 
     """CONTROLLER"""
@@ -119,6 +121,10 @@ class Controller():
 
 
 def main():
+    commands = Commands(logger)
+    commands_thread = CommandsThread(commands)
+    commands_thread.start()
+
     num_states = 3
     feed_forward = 100
     A = [[0.1, 0.2, 0.3],
@@ -161,15 +167,15 @@ def main():
             freq = freq_counter
             freq_counter = 0
             t0 = t
-        print("freq: {}".format(freq))
-        print('------------------')
+        logger.info("freq: {}".format(freq))
+        logger.info('------------------')
         y = dyn_process_session.get_output()
-        print('y: {}'.format(y))
+        logger.info('y: {}'.format(y))
         u = controller.get_control_signal(y, feed_forward)
         #print("sterowanie: {}".format(u))
         dyn_process_session.set_input(np_to_json(u))
         time.sleep(0.1)
-        print("====================================")
+        logger.info("====================================")
 
     #dyn_process_session = DynamicProcessSession()
     #print(dyn_process_session.get_num_states())
@@ -182,4 +188,7 @@ def main():
     #y = dyn_process_session.set_input(y)
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        sys.exit()
