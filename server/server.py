@@ -33,6 +33,7 @@ class DynamicProcess():
         self.nonlinearity = unity
         self.num_states = 0
         self.num_outputs = 0
+        self.delay = 0
         self.__zero_init()
 
     def __zero_init(self):
@@ -42,10 +43,17 @@ class DynamicProcess():
                       'B': None,
                       'C': None,
                       }
+        self.fifo = []
+        for i in range(self.delay):
+            self.fifo.append(self.__y)
+
+
 
     def set_value(self, u):
         self.__x = dot(self.coeff['A'], self.__x) + dot(self.coeff['B'], u)
-        self.__y = dot(self.coeff['C'], self.nonlinearity(self.__x)) + np.random.normal(0, 0.1)
+        output = dot(self.coeff['C'], self.nonlinearity(self.__x)) + np.random.normal(0, 0.1)
+        self.fifo.append(output)
+        self.__y = self.fifo.pop(0)
         print("state: {}".format(self.__x))
         print("out: {}".format(self.__y))
         print("=================================================")
@@ -59,6 +67,11 @@ class DynamicProcess():
 
     def set_num_outputs(self, num_outputs):
         self.num_outputs = num_outputs
+        self.__zero_init()
+
+    def set_delay(self, delay):
+        self.delay = delay
+        print('delay= {}'.format(delay))
         self.__zero_init()
 
 
@@ -125,6 +138,18 @@ class NumOutputsWebService(Resource):
     def put(self):
         num_outputs= request.form['data']
         dynamic_process.set_num_outputs(int(num_outputs))
+
+@api.route('/delay')
+class DelayWebService(Resource):
+
+    def get(self):
+        return str(dynamic_process.delay)
+
+    def put(self):
+        delay = request.form['data']
+        dynamic_process.set_delay(int(delay))
+
+
 
 app.config["SERVER_NAME"] = "20.0.0.2:5000"
 app.app_context().__enter__()

@@ -85,6 +85,13 @@ class DynamicProcessSession():
     def set_num_outputs(self, value):
         r = self.__put('num_outputs', value)
 
+    def get_delay(self):
+        data = self.__get('delay')
+        return data
+
+    def set_delay(self, value):
+        r = self.__put('delay', value)
+
 
 class Controller():
     def __init__(self, num_states, num_inputs):
@@ -170,6 +177,7 @@ def main():
 
     num_states = 3
     num_inputs = 2
+    delay = 0
     feed_forward = [[100],
                     [100]]
     A = [[0.1, 0.2, 0.3],
@@ -194,6 +202,7 @@ def main():
     dyn_process_session = DynamicProcessSession()
     dyn_process_session.set_num_states(json.dumps(num_states))
     dyn_process_session.set_num_outputs(json.dumps(num_inputs))
+    dyn_process_session.set_delay(json.dumps(delay))
     dyn_process_session.set_coefficient('A', json.dumps(A))
     dyn_process_session.set_coefficient('B', json.dumps(B))
     dyn_process_session.set_coefficient('C', json.dumps(C))
