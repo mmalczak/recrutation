@@ -47,6 +47,8 @@ class DynamicProcess():
         self.num_states = 0
         self.num_outputs = 0
         self.delay = 0
+        self.error_dist_mu = 0
+        self.error_dist_sigma = 0.1
         self.__zero_init()
 
     def __zero_init(self):
@@ -64,7 +66,9 @@ class DynamicProcess():
 
     def set_value(self, u):
         self.__x = dot(self.coeff['A'], self.__x) + dot(self.coeff['B'], u)
-        output = dot(self.coeff['C'], self.nonlinearity(self.__x)) + np.random.normal(0, 0.1)
+        output = dot(self.coeff['C'], self.nonlinearity(self.__x)) +\
+            transpose(matrix(np.random.normal(self.error_dist_mu,
+            self.error_dist_sigma, self.num_outputs)))
         self.fifo.append(output)
         self.__y = self.fifo.pop(0)
         print("state: {}".format(self.__x))
@@ -171,6 +175,27 @@ class NonlinearityWebService(Resource):
     def put(self):
         nonlinearity = request.form['data']
         dynamic_process.set_nonlinearity(nonlinearity)
+
+@api.route('/error_dist/mu')
+class ErrorMuWebService(Resource):
+
+    def get(self):
+        return str(dynamic_process.error_dist_mu)
+
+    def put(self):
+        mu = request.form['data']
+        dynamic_process.error_dist_mu = float(mu)
+
+@api.route('/error_dist/sigma')
+class ErrorSigmaWebService(Resource):
+
+    def get(self):
+        return str(dynamic_process.error_dist_sigma)
+
+    def put(self):
+        sigma = request.form['data']
+        dynamic_process.error_dist_sigma = float(sigma)
+
 
 
 app.config["SERVER_NAME"] = "20.0.0.2:5000"

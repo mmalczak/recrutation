@@ -58,6 +58,54 @@
         ]
       }
     },
+    "/error_dist/mu": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "get_error_mu_web_service",
+        "tags": [
+          "default"
+        ]
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "put_error_mu_web_service",
+        "tags": [
+          "default"
+        ]
+      }
+    },
+    "/error_dist/sigma": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "get_error_sigma_web_service",
+        "tags": [
+          "default"
+        ]
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "put_error_sigma_web_service",
+        "tags": [
+          "default"
+        ]
+      }
+    },
     "/in_out": {
       "get": {
         "responses": {

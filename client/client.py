@@ -95,6 +95,12 @@ class DynamicProcessSession():
     def set_nonlinearity(self, value):
         r = self.__put('nonlinearity', value)
 
+    def set_error_dist_mu(self, value):
+        r = self.__put('error_dist/mu', value)
+
+    def set_error_dist_sigma(self, value):
+        r = self.__put('error_dist/sigma', value)
+
 
 class Controller():
     def __init__(self, num_states, num_inputs):
@@ -182,6 +188,8 @@ def main():
     num_inputs = 2
     delay = 0
     nonlinearity = 'unity'
+    error_dist_mu = 0
+    error_dist_sigma = 1
     feed_forward = [[100],
                     [100]]
     A = [[0.1, 0.2, 0.3],
@@ -208,6 +216,8 @@ def main():
     dyn_process_session.set_num_outputs(json.dumps(num_inputs))
     dyn_process_session.set_delay(json.dumps(delay))
     dyn_process_session.set_nonlinearity(nonlinearity)
+    dyn_process_session.set_error_dist_mu(error_dist_mu)
+    dyn_process_session.set_error_dist_sigma(error_dist_sigma)
     dyn_process_session.set_coefficient('A', json.dumps(A))
     dyn_process_session.set_coefficient('B', json.dumps(B))
     dyn_process_session.set_coefficient('C', json.dumps(C))
