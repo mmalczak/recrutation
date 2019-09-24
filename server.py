@@ -1,6 +1,5 @@
 import random
 import string
-import cherrypy
 import numpy as np
 from numpy import matrix
 from numpy import dot
