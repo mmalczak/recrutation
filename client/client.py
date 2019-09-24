@@ -8,6 +8,8 @@ from numpy import zeros
 from numpy import transpose
 import scipy.signal
 import control
+import logging.config
+from logging_conf import DEFAULT_CONFIG
 
 
 def np_to_json(data):
@@ -92,64 +94,72 @@ class Controller():
         self.K = -dot(np.linalg.pinv(self.B), self.A)
 
 
-num_states = 3
-feed_forward = 100
-A = [[0.1, 0.2, 0.3],
-     [0.3, 0.4, 0.1],
-     [0.2, 0.7, 0.4]
-    ]
-B = [[1, 0.5],
-     [-1, -0.3],
-     [0.2, 0.1]
-    ]
-C = [[0.6, 0.8, 0.7],
-     [0.5, 0.4, 0.2]
-    ]
-D = [1]
-controller = Controller()
-controller.set_num_states(num_states)
-controller.A = matrix(A)
-controller.B = matrix(B)
-controller.C = matrix(C)
-controller.D = matrix(D)
-controller.calculate_observer_controller()
-dyn_process_session = DynamicProcessSession()
-dyn_process_session.set_num_states(str(num_states))
-dyn_process_session.set_coefficient('A', json.dumps(A))
-dyn_process_session.set_coefficient('B', json.dumps(B))
-dyn_process_session.set_coefficient('C', json.dumps(C))
 
-W_c = control.ctrb(controller.A, controller.B)
-W_o = control.obsv(controller.A, controller.C)
-print(np.linalg.matrix_rank(W_c))
-print(np.linalg.matrix_rank(W_o))
+def main():
+    logging.config.dictConfig(DEFAULT_CONFIG)
+    logger = logging.getLogger(__name__)
 
-t0 = time.perf_counter()
-freq_counter = 0
-freq = 0
-while(True):
-    freq_counter += 1
-    t = time.perf_counter()
-    if (t - t0) > 1:
-        freq = freq_counter
-        freq_counter = 0
-        t0 = t
-    print("freq: {}".format(freq))
-    print('------------------')
-    y = dyn_process_session.get_output()
-    print('y: {}'.format(y))
-    u = controller.get_control_signal(y, feed_forward)
-    #print("sterowanie: {}".format(u))
-    dyn_process_session.set_input(np_to_json(u))
-    time.sleep(0.1)
-    print("====================================")
-#
-###dyn_process_session = DynamicProcessSession()
-###dyn_process_session.get_num_states()
-###dyn_process_session.set_num_states(3)
-###dyn_process_session.get_num_states()
-###dyn_process_session.set_coefficient('A', json.dumps(A))
-###dyn_process_session.get_coefficient('A')
-###y = dyn_process_session.get_output()
-###print(y)
-###y = dyn_process_session.set_input(y)
+    num_states = 3
+    feed_forward = 100
+    A = [[0.1, 0.2, 0.3],
+         [0.3, 0.4, 0.1],
+         [0.2, 0.7, 0.4]
+        ]
+    B = [[1, 0.5],
+         [-1, -0.3],
+         [0.2, 0.1]
+        ]
+    C = [[0.6, 0.8, 0.7],
+         [0.5, 0.4, 0.2]
+        ]
+    D = [1]
+    controller = Controller()
+    controller.set_num_states(num_states)
+    controller.A = matrix(A)
+    controller.B = matrix(B)
+    controller.C = matrix(C)
+    controller.D = matrix(D)
+    controller.calculate_observer_controller()
+    dyn_process_session = DynamicProcessSession()
+    dyn_process_session.set_num_states(str(num_states))
+    dyn_process_session.set_coefficient('A', json.dumps(A))
+    dyn_process_session.set_coefficient('B', json.dumps(B))
+    dyn_process_session.set_coefficient('C', json.dumps(C))
+
+    W_c = control.ctrb(controller.A, controller.B)
+    W_o = control.obsv(controller.A, controller.C)
+    print(np.linalg.matrix_rank(W_c))
+    print(np.linalg.matrix_rank(W_o))
+
+    t0 = time.perf_counter()
+    freq_counter = 0
+    freq = 0
+    while(True):
+        freq_counter += 1
+        t = time.perf_counter()
+        if (t - t0) > 1:
+            freq = freq_counter
+            freq_counter = 0
+            t0 = t
+        print("freq: {}".format(freq))
+        print('------------------')
+        y = dyn_process_session.get_output()
+        print('y: {}'.format(y))
+        u = controller.get_control_signal(y, feed_forward)
+        #print("sterowanie: {}".format(u))
+        dyn_process_session.set_input(np_to_json(u))
+        time.sleep(0.1)
+        print("====================================")
+    #
+    ###dyn_process_session = DynamicProcessSession()
+    ###dyn_process_session.get_num_states()
+    ###dyn_process_session.set_num_states(3)
+    ###dyn_process_session.get_num_states()
+    ###dyn_process_session.set_coefficient('A', json.dumps(A))
+    ###dyn_process_session.get_coefficient('A')
+    ###y = dyn_process_session.get_output()
+    ###print(y)
+    ###y = dyn_process_session.set_input(y)
+
+if __name__ == '__main__':
+    main()
