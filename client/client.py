@@ -80,9 +80,9 @@ class DynamicProcessSession():
 
 
 class Controller():
-    def __init__(self):
-        self.num_states = 3
-        self.num_inputs = 2
+    def __init__(self, num_states, num_inputs):
+        self.num_states = num_states
+        self.num_inputs = num_inputs
         self.__zero_init()
         self.update_shapes()
 
@@ -94,7 +94,6 @@ class Controller():
                                 'L':(self.num_states, self.num_inputs),
                                 'K':(self.num_inputs, self.num_states)
                                 }
-
 
     def __zero_init(self):
         self.x_est = matrix(zeros([self.num_states])).transpose()
@@ -120,7 +119,6 @@ class Controller():
             logger.warning("Wrong matrix shape")
             return
         setattr(self, name, value)
-        print(matrix(value))
 
     """OBSERVER"""
     def get_est_state(self, y):
@@ -160,6 +158,7 @@ def main():
     commands_thread.start()
 
     num_states = 3
+    num_inputs = 2
     feed_forward = [[100],
                     [100]]
     A = [[0.1, 0.2, 0.3],
@@ -174,8 +173,7 @@ def main():
          [0.5, 0.4, 0.2]
         ]
     D = [[1, 0], [0, 1]]
-    controller = Controller()
-    controller.set_num_states(num_states)
+    controller = Controller(num_states, num_inputs)
     controller.set_matrix('A', A)
     controller.set_matrix('B', B)
     controller.set_matrix('C', C)
