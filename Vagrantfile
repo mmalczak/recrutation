@@ -85,7 +85,7 @@ Vagrant.configure("2") do |config|
 
     config.vm.define :snort do |snort|
         snort.vm.provision :shell, path: "bootstrap.sh"
-        snort.vm.provision :shell, path: "snort_conf.sh"
+        snort.vm.provision :shell, path: "snort/snort_conf.sh"
         snort.vm.network "private_network", ip: "30.0.0.2"
         snort.vm.network "private_network", ip: "40.0.0.2"
         snort.vm.provision "shell",
@@ -97,7 +97,7 @@ Vagrant.configure("2") do |config|
     config.vm.define :db do |db|
         db.vm.provision :shell, path: "bootstrap.sh"
         db.vm.network "private_network", ip: "40.0.0.3"
-        db.vm.provision :shell, path: "db_conf.sh"
+        db.vm.provision :shell, path: "db/db_conf.sh"
         db.vm.provision "shell",
             inline: "python3.6 -m pip install pymongo" 
 
