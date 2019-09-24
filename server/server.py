@@ -31,21 +31,17 @@ class DynamicProcess():
     def __init__(self):
         #self.nonlinearity = np.sin
         self.nonlinearity = unity
-        self.num_states = 2
-        self.num_outputs = 2
+        self.num_states = 0
+        self.num_outputs = 0
         self.__zero_init()
-
 
     def __zero_init(self):
         self.__y = transpose(matrix(zeros([self.num_outputs])))
         self.__x = transpose(matrix(zeros([self.num_states])))
-
-
         self.coeff = {'A': None,
                       'B': None,
                       'C': None,
                       }
-
 
     def set_value(self, u):
         self.__x = dot(self.coeff['A'], self.__x) + dot(self.coeff['B'], u)
@@ -59,6 +55,10 @@ class DynamicProcess():
 
     def set_num_states(self, num_states):
         self.num_states = num_states
+        self.__zero_init()
+
+    def set_num_outputs(self, num_outputs):
+        self.num_outputs = num_outputs
         self.__zero_init()
 
 
@@ -115,6 +115,16 @@ class NumStatesWebService(Resource):
     def put(self):
         num_states = request.form['data']
         dynamic_process.set_num_states(int(num_states))
+
+@api.route('/num_outputs')
+class NumOutputsWebService(Resource):
+
+    def get(self):
+        return str(dynamic_process.num_outputs)
+
+    def put(self):
+        num_outputs= request.form['data']
+        dynamic_process.set_num_outputs(int(num_outputs))
 
 app.config["SERVER_NAME"] = "20.0.0.2:5000"
 app.app_context().__enter__()

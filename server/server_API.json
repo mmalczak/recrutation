@@ -58,6 +58,30 @@
         ]
       }
     },
+    "/num_outputs": {
+      "put": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "put_num_outputs_web_service",
+        "tags": [
+          "default"
+        ]
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "get_num_outputs_web_service",
+        "tags": [
+          "default"
+        ]
+      }
+    },
     "/num_states": {
       "put": {
         "responses": {

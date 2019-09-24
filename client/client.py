@@ -78,6 +78,13 @@ class DynamicProcessSession():
     def set_num_states(self, value):
         r = self.__put('num_states', value)
 
+    def get_num_outputs(self):
+        data = self.__get('num_outputs')
+        return data
+
+    def set_num_outputs(self, value):
+        r = self.__put('num_outputs', value)
+
 
 class Controller():
     def __init__(self, num_states, num_inputs):
@@ -183,8 +190,10 @@ def main():
     controller.set_matrix('C', C)
     controller.set_matrix('D', D)
     controller.calculate_observer_controller()
+
     dyn_process_session = DynamicProcessSession()
     dyn_process_session.set_num_states(json.dumps(num_states))
+    dyn_process_session.set_num_outputs(json.dumps(num_inputs))
     dyn_process_session.set_coefficient('A', json.dumps(A))
     dyn_process_session.set_coefficient('B', json.dumps(B))
     dyn_process_session.set_coefficient('C', json.dumps(C))
