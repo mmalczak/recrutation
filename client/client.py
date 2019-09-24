@@ -187,8 +187,10 @@ def main():
 
     W_c = control.ctrb(controller.A, controller.B)
     W_o = control.obsv(controller.A, controller.C)
-    print(np.linalg.matrix_rank(W_c))
-    print(np.linalg.matrix_rank(W_o))
+    print('The rank of controlability matrix is: {}'.format(
+                                                np.linalg.matrix_rank(W_c)))
+    print('The rank of observability matrix is: {}'.format(
+                                                np.linalg.matrix_rank(W_o)))
 
     t0 = time.perf_counter()
     freq_counter = 0
