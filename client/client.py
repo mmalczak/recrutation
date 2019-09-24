@@ -3,6 +3,7 @@ import requests
 import json
 import time
 import numpy as np
+import queue
 from numpy import matrix
 from numpy import dot
 from numpy import zeros
@@ -83,16 +84,43 @@ class Controller():
         self.num_states = 3
         self.num_inputs = 2
         self.__zero_init()
+        self.update_shapes()
+
+    def update_shapes(self):
+        self.expected_shapes = {'A':(self.num_states, self.num_states),
+                                'B':(self.num_states, self.num_inputs),
+                                'C':(self.num_inputs, self.num_states),
+                                'D':(self.num_inputs, self.num_inputs),
+                                'L':(self.num_states, self.num_inputs),
+                                'K':(self.num_inputs, self.num_states)
+                                }
+
 
     def __zero_init(self):
         self.x_est = matrix(zeros([self.num_states])).transpose()
         self.u = matrix(zeros([self.num_inputs])).transpose()
         self.K = None
+        self.L = None
         self.A = None
         self.B = None
         self.C = None
         self.D = None
 
+    def set_matrix(self, name, value):
+        if type(value) is str:
+            try:
+                value = json.loads(value)
+            except json.decoder.JSONDecodeError:
+                logger.error("Wrong input data")
+                return
+        value = matrix(value)
+        try:
+            assert value.shape == self.expected_shapes[name]
+        except AssertionError:
+            logger.warning("Wrong matrix shape")
+            return
+        setattr(self, name, value)
+        print(matrix(value))
 
     """OBSERVER"""
     def get_est_state(self, y):
@@ -111,6 +139,12 @@ class Controller():
     def set_num_states(self, num_states):
         self.num_states = num_states
         self.__zero_init()
+        self.update_shapes()
+
+    def set_num_inputs(self, num_inputs):
+        self.num_inputs = num_inputs
+        self.__zero_init()
+        self.update_shapes()
 
     def calculate_observer_controller(self):
         #self.L = control.acker(transpose(self.A), transpose(self.C), [0, 0])
@@ -119,14 +153,15 @@ class Controller():
         self.K = -dot(np.linalg.pinv(self.B), self.A) # controller
 
 
-
 def main():
-    commands = Commands(logger)
+    queue_ = queue.Queue()
+    commands = Commands(logger, queue_)
     commands_thread = CommandsThread(commands)
     commands_thread.start()
 
     num_states = 3
-    feed_forward = 100
+    feed_forward = [[100],
+                    [100]]
     A = [[0.1, 0.2, 0.3],
          [0.3, 0.4, 0.1],
          [0.2, 0.7, 0.4]
@@ -138,13 +173,13 @@ def main():
     C = [[0.6, 0.8, 0.7],
          [0.5, 0.4, 0.2]
         ]
-    D = [1]
+    D = [[1, 0], [0, 1]]
     controller = Controller()
     controller.set_num_states(num_states)
-    controller.A = matrix(A)
-    controller.B = matrix(B)
-    controller.C = matrix(C)
-    controller.D = matrix(D)
+    controller.set_matrix('A', A)
+    controller.set_matrix('B', B)
+    controller.set_matrix('C', C)
+    controller.set_matrix('D', D)
     controller.calculate_observer_controller()
     dyn_process_session = DynamicProcessSession()
     dyn_process_session.set_num_states(str(num_states))
@@ -176,6 +211,11 @@ def main():
         dyn_process_session.set_input(np_to_json(u))
         time.sleep(0.1)
         logger.info("====================================")
+        try:
+            [type, name, values] = queue_.get_nowait()
+            getattr(controller, type)(name, values)
+        except queue.Empty:
+            pass
 
     #dyn_process_session = DynamicProcessSession()
     #print(dyn_process_session.get_num_states())

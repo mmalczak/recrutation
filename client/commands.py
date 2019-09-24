@@ -15,15 +15,12 @@ class CommandsThread(threading.Thread):
 
 class Commands(cmd.Cmd):
 
-    def __init__(self, logger):
+    def __init__(self, logger, queue):
         super(Commands, self).__init__()
         self.logger = logger
-
-    def do_bleble(self, line):
-        print("bleblebla")
+        self.queue = queue
 
     def do_h(self, line):
-        print("dupa")
         self.logger.setLevel('WARNING')
 
     def do_s(self, line):
@@ -31,3 +28,11 @@ class Commands(cmd.Cmd):
 
     def do_exit(self, line):
         sys.exit()
+
+    def do_controller_coeff(self, line):
+        available_names = ['A', 'B', 'C', 'D', 'K', 'L']
+        [name, value] = line.split(';')
+        if name in available_names:
+            self.queue.put(['set_matrix', name, value])
+        else:
+            logger.warning("Incorrect matrix name")
