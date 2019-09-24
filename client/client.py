@@ -119,6 +119,11 @@ class Controller():
             logger.warning("Wrong matrix shape")
             return
         setattr(self, name, value)
+        if name in ['A', 'B', 'C']:
+            try:
+                self.calculate_observer_controller()
+            except TypeError:
+                pass # one of the matrices could be not initialized
 
     """OBSERVER"""
     def get_est_state(self, y):
@@ -149,7 +154,7 @@ class Controller():
         self.L = dot(np.linalg.pinv(transpose(self.C)), transpose(self.A)) # observer
         self.L = transpose(matrix(self.L))
         self.K = -dot(np.linalg.pinv(self.B), self.A) # controller
-
+        print('K: {}'.format(self.K))
 
 def main():
     queue_ = queue.Queue()
