@@ -107,6 +107,17 @@
       }
     },
     "/in_out": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "post_measure_control_web_service",
+        "tags": [
+          "default"
+        ]
+      },
       "get": {
         "responses": {
           "200": {
@@ -114,17 +125,6 @@
           }
         },
         "operationId": "get_measure_control_web_service",
-        "tags": [
-          "default"
-        ]
-      },
-      "put": {
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "operationId": "put_measure_control_web_service",
         "tags": [
           "default"
         ]

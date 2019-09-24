@@ -57,12 +57,22 @@ class DynamicProcessSession():
             logger.critical('Connection refused when exectuting get on ' + path)
             sys.exit()
 
+    def __post(self, path, data):
+        try:
+            self.__session.post(self.__address + path, data={'data':data}).json()
+        except ConnectionRefusedError:
+            logger.critical('Connection refused when exectuting get on ' + path)
+            sys.exit()
+        except requests.exceptions.ConnectionError:
+            logger.critical('Connection refused when exectuting get on ' + path)
+            sys.exit()
+
     def get_output(self):
         data = self.__get('in_out')
         return data
 
     def set_input(self, value):
-        self.__put('in_out', value)
+        self.__post('in_out', value)
 
     def get_coefficient(self, type):
         data = self.__get('coefficients/' + type)

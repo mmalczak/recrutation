@@ -122,7 +122,7 @@ class MeasureControlWebService(Resource):
     def get(self):
         return measurement.read_value()
 
-    def put(self):
+    def post(self):
         value = request.form['data']
         u = json_to_np(value)
         controller.set_value(u)
