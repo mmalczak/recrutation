@@ -231,16 +231,6 @@ def main():
         except queue.Empty:
             pass
 
-    #dyn_process_session = DynamicProcessSession()
-    #print(dyn_process_session.get_num_states())
-    #dyn_process_session.set_num_states(3)
-    #dyn_process_session.get_num_states()
-    #dyn_process_session.set_coefficient('A', json.dumps(A))
-    #print(dyn_process_session.get_coefficient('A'))
-    #y = dyn_process_session.get_output()
-    #print(y)
-    #y = dyn_process_session.set_input(y)
-
 if __name__ == '__main__':
     try:
         main()
