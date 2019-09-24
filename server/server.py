@@ -27,9 +27,22 @@ def json_to_np(data):
 def unity(x):
     return x
 
+def sin(x):
+    return np.sin(x)
+
+def pow2(x):
+    return np.power(x, 2)
+
+def pow3(x):
+    return np.power(x, 3)
+
+def exp(x):
+    return np.exp(x)
+
+nonlinearities = {'unity':unity, 'sin':sin, 'pow2':pow2, 'pow3':pow3, 'exp':exp}
+
 class DynamicProcess():
     def __init__(self):
-        #self.nonlinearity = np.sin
         self.nonlinearity = unity
         self.num_states = 0
         self.num_outputs = 0
@@ -73,6 +86,9 @@ class DynamicProcess():
         self.delay = delay
         print('delay= {}'.format(delay))
         self.__zero_init()
+
+    def set_nonlinearity(self, nonlinearity):
+        self.nonlinearity = nonlinearities[nonlinearity]
 
 
 class Measurement():
@@ -149,6 +165,12 @@ class DelayWebService(Resource):
         delay = request.form['data']
         dynamic_process.set_delay(int(delay))
 
+@api.route('/nonlinearity')
+class NonlinearityWebService(Resource):
+
+    def put(self):
+        nonlinearity = request.form['data']
+        dynamic_process.set_nonlinearity(nonlinearity)
 
 
 app.config["SERVER_NAME"] = "20.0.0.2:5000"

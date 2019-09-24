@@ -82,6 +82,19 @@
         ]
       }
     },
+    "/nonlinearity": {
+      "put": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "put_nonlinearity_web_service",
+        "tags": [
+          "default"
+        ]
+      }
+    },
     "/num_outputs": {
       "get": {
         "responses": {
