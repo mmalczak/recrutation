@@ -59,7 +59,7 @@ class DynamicProcessSession():
 
     def get_output(self):
         data = self.__get('in_out')
-        return json_to_np(data)
+        return data
 
     def set_input(self, value):
         self.__put('in_out', value)
@@ -154,7 +154,6 @@ class Controller():
         self.L = dot(np.linalg.pinv(transpose(self.C)), transpose(self.A)) # observer
         self.L = transpose(matrix(self.L))
         self.K = -dot(np.linalg.pinv(self.B), self.A) # controller
-        print('K: {}'.format(self.K))
 
 def main():
     queue_ = queue.Queue()
@@ -185,7 +184,7 @@ def main():
     controller.set_matrix('D', D)
     controller.calculate_observer_controller()
     dyn_process_session = DynamicProcessSession()
-    dyn_process_session.set_num_states(str(num_states))
+    dyn_process_session.set_num_states(json.dumps(num_states))
     dyn_process_session.set_coefficient('A', json.dumps(A))
     dyn_process_session.set_coefficient('B', json.dumps(B))
     dyn_process_session.set_coefficient('C', json.dumps(C))
@@ -210,6 +209,7 @@ def main():
         logger.info("freq: {}".format(freq))
         logger.info('------------------')
         y = dyn_process_session.get_output()
+        y = json_to_np(y)
         logger.info('y: {}'.format(y))
         u = controller.get_control_signal(y, feed_forward)
         #print("sterowanie: {}".format(u))
