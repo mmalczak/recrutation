@@ -11,17 +11,6 @@
           "type": "string"
         }
       ],
-      "get": {
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "operationId": "get_coefficients_web_service",
-        "tags": [
-          "default"
-        ]
-      },
       "put": {
         "responses": {
           "200": {
@@ -32,20 +21,20 @@
         "tags": [
           "default"
         ]
-      }
-    },
-    "/in_out": {
+      },
       "get": {
         "responses": {
           "200": {
             "description": "Success"
           }
         },
-        "operationId": "get_measure_control_web_service",
+        "operationId": "get_coefficients_web_service",
         "tags": [
           "default"
         ]
-      },
+      }
+    },
+    "/in_out": {
       "put": {
         "responses": {
           "200": {
@@ -56,20 +45,20 @@
         "tags": [
           "default"
         ]
-      }
-    },
-    "/num_states": {
+      },
       "get": {
         "responses": {
           "200": {
             "description": "Success"
           }
         },
-        "operationId": "get_num_states_web_service",
+        "operationId": "get_measure_control_web_service",
         "tags": [
           "default"
         ]
-      },
+      }
+    },
+    "/num_states": {
       "put": {
         "responses": {
           "200": {
@@ -77,6 +66,17 @@
           }
         },
         "operationId": "put_num_states_web_service",
+        "tags": [
+          "default"
+        ]
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "get_num_states_web_service",
         "tags": [
           "default"
         ]
