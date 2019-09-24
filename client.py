@@ -36,8 +36,8 @@ class DynamicProcessSession():
         r = self.__session.put(self.__address + 'in_out', data={'data':value})
 
     def get_coefficient(self, type):
-        r = self.__session.get(self.__address + 'coefficients/' + type)
-        print(r.text)
+        r = self.__session.get(self.__address + 'coefficients/' + type).json()
+        return r
 
     def set_coefficient(self, type, value):
         r = self.__session.put(self.__address + 'coefficients/' + type,
@@ -45,7 +45,7 @@ class DynamicProcessSession():
 
     def get_num_states(self):
         r = self.__session.get(self.__address + 'num_states').json()
-        print(r)
+        return r
 
     def set_num_states(self, value):
         r = self.__session.put(self.__address + 'num_states',
