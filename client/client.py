@@ -1,3 +1,4 @@
+import sys
 import requests
 import json
 import time
@@ -10,6 +11,9 @@ import scipy.signal
 import control
 import logging.config
 from logging_conf import DEFAULT_CONFIG
+logging.config.dictConfig(DEFAULT_CONFIG)
+logger = logging.getLogger(__name__)
+
 
 
 def np_to_json(data):
@@ -29,29 +33,48 @@ class DynamicProcessSession():
         self.__session = requests.Session()
         self.__address = 'http://20.0.0.2:5000/'
 
+    def __get(self, path):
+        try:
+            data = self.__session.get(self.__address + path).json()
+            return data
+        except ConnectionRefusedError:
+            logger.critical('Connection refused when exectuting get on ' + path)
+            sys.exit()
+        except requests.exceptions.ConnectionError:
+            logger.critical('Connection refused when exectuting get on ' + path)
+            sys.exit()
+
+    def __put(self, path, data):
+        try:
+            self.__session.put(self.__address + path, data={'data':data}).json()
+        except ConnectionRefusedError:
+            logger.critical('Connection refused when exectuting get on ' + path)
+            sys.exit()
+        except requests.exceptions.ConnectionError:
+            logger.critical('Connection refused when exectuting get on ' + path)
+            sys.exit()
+
     def get_output(self):
-        r = self.__session.get(self.__address + 'in_out')
-        data = r.json()
-        return json_to_np(data) 
+        data = self.__get('in_out')
+        return json_to_np(data)
 
     def set_input(self, value):
-        r = self.__session.put(self.__address + 'in_out', data={'data':value})
+        self.__put('in_out', value)
 
     def get_coefficient(self, type):
-        r = self.__session.get(self.__address + 'coefficients/' + type).json()
-        return r
+        data = self.__get('coefficients/' + type)
+        return data
 
     def set_coefficient(self, type, value):
-        r = self.__session.put(self.__address + 'coefficients/' + type,
-                               data={'data':value})
+        r = self.__put('coefficients/' + type, value)
 
     def get_num_states(self):
-        r = self.__session.get(self.__address + 'num_states').json()
-        return r
+        data = self.__get('num_states')
+        return data
 
     def set_num_states(self, value):
-        r = self.__session.put(self.__address + 'num_states',
-                               data={'data': value})
+        r = self.__put('num_states', value)
+
 
 class Controller():
     def __init__(self):
@@ -89,16 +112,13 @@ class Controller():
 
     def calculate_observer_controller(self):
         #self.L = control.acker(transpose(self.A), transpose(self.C), [0, 0])
-        self.L = dot(np.linalg.pinv(transpose(self.C)), transpose(self.A))
+        self.L = dot(np.linalg.pinv(transpose(self.C)), transpose(self.A)) # observer
         self.L = transpose(matrix(self.L))
-        self.K = -dot(np.linalg.pinv(self.B), self.A)
+        self.K = -dot(np.linalg.pinv(self.B), self.A) # controller
 
 
 
 def main():
-    logging.config.dictConfig(DEFAULT_CONFIG)
-    logger = logging.getLogger(__name__)
-
     num_states = 3
     feed_forward = 100
     A = [[0.1, 0.2, 0.3],
@@ -150,16 +170,16 @@ def main():
         dyn_process_session.set_input(np_to_json(u))
         time.sleep(0.1)
         print("====================================")
-    #
-    ###dyn_process_session = DynamicProcessSession()
-    ###dyn_process_session.get_num_states()
-    ###dyn_process_session.set_num_states(3)
-    ###dyn_process_session.get_num_states()
-    ###dyn_process_session.set_coefficient('A', json.dumps(A))
-    ###dyn_process_session.get_coefficient('A')
-    ###y = dyn_process_session.get_output()
-    ###print(y)
-    ###y = dyn_process_session.set_input(y)
+
+    #dyn_process_session = DynamicProcessSession()
+    #print(dyn_process_session.get_num_states())
+    #dyn_process_session.set_num_states(3)
+    #dyn_process_session.get_num_states()
+    #dyn_process_session.set_coefficient('A', json.dumps(A))
+    #print(dyn_process_session.get_coefficient('A'))
+    #y = dyn_process_session.get_output()
+    #print(y)
+    #y = dyn_process_session.set_input(y)
 
 if __name__ == '__main__':
     main()
