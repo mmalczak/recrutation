@@ -7,8 +7,17 @@ from numpy import zeros
 from numpy import transpose
 import json
 
+import logging
+import logging.config
+from logging_conf import DEFAULT_CONFIG
+logging.config.dictConfig(DEFAULT_CONFIG)
+logger = logging.getLogger(__name__)
+
 from flask import Flask, request
 from flask_restplus import Resource, Api
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.WARNING)
 
 app = Flask(__name__)
 api = Api(app=app, title='Server', description='Provides an API to control\
@@ -71,9 +80,9 @@ class DynamicProcess():
             self.error_dist_sigma, self.num_outputs)))
         self.fifo.append(output)
         self.__y = self.fifo.pop(0)
-        print("state: {}".format(self.__x))
-        print("out: {}".format(self.__y))
-        print("=================================================")
+        logger.info("state: {}".format(self.__x))
+        logger.info("out: {}".format(self.__y))
+        logger.info("=================================================")
 
     def get_value(self):
         return np_to_json(self.__y)
@@ -88,7 +97,7 @@ class DynamicProcess():
 
     def set_delay(self, delay):
         self.delay = delay
-        print('delay= {}'.format(delay))
+        logger.info('delay= {}'.format(delay))
         self.__zero_init()
 
     def set_nonlinearity(self, nonlinearity):

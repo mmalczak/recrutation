@@ -5,7 +5,6 @@ DEFAULT_CONFIG = {
     'disable_existing_loggers': False,
     'formatters': {
         'simple': {
-            #'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
             'format': '%(message)s'
         }
     },
@@ -19,7 +18,7 @@ DEFAULT_CONFIG = {
     },
     'loggers': {
         '': {
-            'level': 'WARNING',
+            'level': 'INFO',
             'handlers': ['console']
         }
     }
