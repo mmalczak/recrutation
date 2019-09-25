@@ -51,20 +51,20 @@ class DynamicProcessSession():
         try:
             self.__session.put(self.__address + path, data={'data':data}).json()
         except ConnectionRefusedError:
-            logger.critical('Connection refused when exectuting get on ' + path)
+            logger.critical('Connection refused when exectuting put on ' + path)
             sys.exit()
         except requests.exceptions.ConnectionError:
-            logger.critical('Connection refused when exectuting get on ' + path)
+            logger.critical('Connection refused when exectuting put on ' + path)
             sys.exit()
 
     def __post(self, path, data):
         try:
             self.__session.post(self.__address + path, data={'data':data}).json()
         except ConnectionRefusedError:
-            logger.critical('Connection refused when exectuting get on ' + path)
+            logger.critical('Connection refused when exectuting post on ' + path)
             sys.exit()
         except requests.exceptions.ConnectionError:
-            logger.critical('Connection refused when exectuting get on ' + path)
+            logger.critical('Connection refused when exectuting post on ' + path)
             sys.exit()
 
     def get_output(self):
