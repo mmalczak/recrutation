@@ -38,6 +38,5 @@ with snort_process.stdout:
                 print(ip)
                 print(line, end='')
                 mongo_client.snort_db.blocked_addresses.insert_one({'ip':ip,
-                    'reason': 'Possible TCP DoS - 400 messages during\
-                               3 seconds'})
+                    'reason': 'Possible TCP DoS - 400 messages during 3 seconds'})
 rc = snort_process.wait()
