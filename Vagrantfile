@@ -33,7 +33,7 @@ Vagrant.configure("2") do |config|
     end
 
     config.vm.define :fw_router do |fw_router|
-        fw_router.vm.provision :shell, path: "port_mirror.sh"
+        fw_router.vm.provision :shell, path: "fw_router/port_mirror.sh"
         fw_router.vm.provision :shell, path: "bootstrap.sh"
         fw_router.vm.network "private_network", ip: "10.0.0.99" # routing
         fw_router.vm.network "private_network", ip: "20.0.0.99" # routing
