@@ -172,8 +172,8 @@ class DelayWebService(Resource):
     def get(self):
         return str(dynamic_process.delay)
 
-    @api.doc(params={'delay': 'Delay of the output of the dynamic process in\
-                               number of samples'})
+    @api.doc(params={'delay': 'Delay of the dynamic process\' output (in\
+                               number of samples)'})
     def put(self):
         delay = request.form['data']
         dynamic_process.set_delay(int(delay))
@@ -194,9 +194,8 @@ class ErrorMuWebService(Resource):
     def get(self):
         return str(dynamic_process.error_dist_mu)
 
-    @api.doc(params={'mu': 'Value of the expectation of the normal distribution\
-                            of the noise added to the output of the dynamic\
-                            process'})
+    @api.doc(params={'mu': 'Value of the noise normal distribution\
+                            expectation'})
     def put(self):
         mu = request.form['data']
         dynamic_process.error_dist_mu = float(mu)
@@ -207,9 +206,8 @@ class ErrorSigmaWebService(Resource):
     def get(self):
         return str(dynamic_process.error_dist_sigma)
 
-    @api.doc(params={'sigma': 'Value of the standard deviation of the normal\
-                               distribution of the noise added to the output of\
-                               the dynamic process'})
+    @api.doc(params={'sigma': 'Value of the noise normal distribution\
+                               sigma'})
     def put(self):
         sigma = request.form['data']
         dynamic_process.error_dist_sigma = float(sigma)

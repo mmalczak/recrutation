@@ -12,17 +12,6 @@
           "type": "string"
         }
       ],
-      "get": {
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "operationId": "get_coefficients_web_service",
-        "tags": [
-          "default"
-        ]
-      },
       "put": {
         "responses": {
           "200": {
@@ -41,9 +30,39 @@
         "tags": [
           "default"
         ]
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "get_coefficients_web_service",
+        "tags": [
+          "default"
+        ]
       }
     },
     "/delay": {
+      "put": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "put_delay_web_service",
+        "parameters": [
+          {
+            "description": "Delay of the dynamic process' output (in                               number of samples)",
+            "name": "delay",
+            "type": "string",
+            "in": "query"
+          }
+        ],
+        "tags": [
+          "default"
+        ]
+      },
       "get": {
         "responses": {
           "200": {
@@ -54,18 +73,20 @@
         "tags": [
           "default"
         ]
-      },
+      }
+    },
+    "/error_dist/mu": {
       "put": {
         "responses": {
           "200": {
             "description": "Success"
           }
         },
-        "operationId": "put_delay_web_service",
+        "operationId": "put_error_mu_web_service",
         "parameters": [
           {
-            "description": "Delay of the output of the dynamic process in                               number of samples",
-            "name": "delay",
+            "description": "Value of the noise normal distribution                            expectation",
+            "name": "mu",
             "type": "string",
             "in": "query"
           }
@@ -73,9 +94,7 @@
         "tags": [
           "default"
         ]
-      }
-    },
-    "/error_dist/mu": {
+      },
       "get": {
         "responses": {
           "200": {
@@ -86,18 +105,20 @@
         "tags": [
           "default"
         ]
-      },
+      }
+    },
+    "/error_dist/sigma": {
       "put": {
         "responses": {
           "200": {
             "description": "Success"
           }
         },
-        "operationId": "put_error_mu_web_service",
+        "operationId": "put_error_sigma_web_service",
         "parameters": [
           {
-            "description": "Value of the expectation of the normal distribution                            of the noise added to the output of the dynamic                            process",
-            "name": "mu",
+            "description": "Value of the noise normal distribution                               sigma",
+            "name": "sigma",
             "type": "string",
             "in": "query"
           }
@@ -105,9 +126,7 @@
         "tags": [
           "default"
         ]
-      }
-    },
-    "/error_dist/sigma": {
+      },
       "get": {
         "responses": {
           "200": {
@@ -118,39 +137,9 @@
         "tags": [
           "default"
         ]
-      },
-      "put": {
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "operationId": "put_error_sigma_web_service",
-        "parameters": [
-          {
-            "description": "Value of the standard deviation of the normal                               distribution of the noise added to the output of                               the dynamic process",
-            "name": "sigma",
-            "type": "string",
-            "in": "query"
-          }
-        ],
-        "tags": [
-          "default"
-        ]
       }
     },
     "/in_out": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "operationId": "get_measure_control_web_service",
-        "tags": [
-          "default"
-        ]
-      },
       "post": {
         "responses": {
           "200": {
@@ -166,6 +155,17 @@
             "in": "query"
           }
         ],
+        "tags": [
+          "default"
+        ]
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "get_measure_control_web_service",
         "tags": [
           "default"
         ]
@@ -193,17 +193,6 @@
       }
     },
     "/num_outputs": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "operationId": "get_num_outputs_web_service",
-        "tags": [
-          "default"
-        ]
-      },
       "put": {
         "responses": {
           "200": {
@@ -222,20 +211,20 @@
         "tags": [
           "default"
         ]
-      }
-    },
-    "/num_states": {
+      },
       "get": {
         "responses": {
           "200": {
             "description": "Success"
           }
         },
-        "operationId": "get_num_states_web_service",
+        "operationId": "get_num_outputs_web_service",
         "tags": [
           "default"
         ]
-      },
+      }
+    },
+    "/num_states": {
       "put": {
         "responses": {
           "200": {
@@ -251,6 +240,17 @@
             "in": "query"
           }
         ],
+        "tags": [
+          "default"
+        ]
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "operationId": "get_num_states_web_service",
         "tags": [
           "default"
         ]
