@@ -67,21 +67,40 @@ The order of running the scripts is important -- You cannot control the process
 which is not started.
 
 
-The client will send example configuration of the process to the server. The
+Client reads the configuration from init_data.json file. The following data
+is provided:
+
+    A, B, C - matrices describing the process simulated in the server. The
+        process is described with following equations:
+            
+            x(t+1) = Ax(t) + Bv(t)
+
+            y(t) = Cx(t)
+
+    D - feed-forward matrix of the controller
+
+    num_states - number of states in the simulated process
+
+    num_inputs - number of inputs/outputs of the simulated process
+
+    delay - delay of the output of the process (in number of samples)
+
+    nonlinearity - function that introduces nonlinearity in the simulated process
+
+    error_dist_mu - value of noise normal distribution expectation
+
+    error_dist_sigma - value of noise normal distribution expectation
+
+    feed_forward - feed_forward input
+ 
+
+The client will send configuration of the process to the server. The
 process is configured with the use of the Rest API. The Swagger documenation
 of the API in .json format is automatically generated every time the server.py
 script is run. The documentation is available in the same folder as the script.
 
-
-The client will configure the server with matrices A, B and C describing the
-process according to the following equations:
-
-    x(t+1) = Ax(t) + Bv(t)
-
-    y(t) = Cx(t)
-
-
-The same matrices are used to design observer(L) and controller(K) matrices of
+The same matrices that are used to configure the process in the server (A, B and C)
+are used to design observer(L) and controller(K) matrices of
 the dead-beat controller. 
 
 
@@ -95,10 +114,11 @@ available:
 
     exit - exits the client application
 
-    controller_coeff - used to changed coefficients of the controller. The
+    controller_coeff - used to change coefficients of the controller. The
         following matrices could be modified: A, B, C, D, L or K. In case of
         modification of A, B or C - matrices L and K will be recalculated.
-        Matrix D is the feed-forward matrix.
+        **Only controller's coefficients will be modified. The simulated
+        process in the server will remain unchanged**
 
  
 In order to start disturbing operation of the server, start zaklocenie machine:
