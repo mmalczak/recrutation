@@ -7,17 +7,17 @@ The project is a recrutation task for NASK.
     * server 
         Simulates the dynamic process. The IP of the server should be
         20.0.0.1/32. However this address is used for communication with the
-        host machine. Therefore, the addres of the server is 20.0.0.2/32
+        host machine. Therefore, the address of the server is 20.0.0.2/32
 
     * client
         Monitors and controls the dynamic process
 
     * zaklocenie
-        Produces the traffic for the server in order to disturbe its correct
+        Produces the traffic for the server in order to disturb its correct
         operation
 
     * fw_router
-        Serves as the router and as firewall and copies the traffic for the
+        Serves as the router and firewall and copies the traffic for the
         snort module. Firewall rules are configured by the snort module.
 
     * snort
@@ -51,7 +51,7 @@ The folder /vagrant of the virtual machine is synchronised with the root of
 the project on the host machine.
  
 
-In order to present the functionalities of the dynamic process and controlles,
+In order to present the functionalities of the dynamic process and controller,
 after logging to the server and client machines, run respective scripts:
 
 In server:
@@ -95,7 +95,7 @@ is provided:
  
 
 The client will send configuration of the process to the server. The
-process is configured with the use of the Rest API. The Swagger documenation
+process is configured with the use of the Rest API. The Swagger documentation
 of the API in .json format is automatically generated every time the server.py
 script is run. The documentation is available in the same folder as the script.
 
@@ -133,7 +133,7 @@ In virtual machine, start zaklocenie.py script:
 
 Description of the disruption produced by zaklocenie is available in README
 file in zaklocenie folder.
-After staring the script, there should be a lot of error messaged produced by
+After starting the script, there should be a lot of error messages produced by
 the server.
 
 
@@ -153,7 +153,7 @@ It will start the service exposing REST API for the snort module, listening for
 the IPs to block.
 
 
-Then, login to the snort machine start the Snort software:
+Then, login to the snort machine and start Snort software:
 
     $ vagrant ssh snort 
 
@@ -161,7 +161,7 @@ In virtual machine:
 
     $ sudo python3.6 /vagrant/snort/snort.py 
 
-It will start the Snort software with predifined rule. It will produce an alert
+It will start Snort software with predifined rule. It will produce an alert
 if during 3 seconds 400 packets are sent to 20.0.0.0/24 - local network where
 the server is located.
 
