@@ -115,10 +115,10 @@ available:
     exit - exits the client application
 
     controller_coeff - used to change coefficients of the controller. The
-following matrices could be modified: A, B, C, D, L or K. In case of
-modification of A, B or C - matrices L and K will be recalculated.
-**Only controller's coefficients will be modified. The simulated
-process in the server will remain unchanged**
+        following matrices could be modified: A, B, C, D, L or K. In case of
+        modification of A, B or C - matrices L and K will be recalculated.
+        **Only controller's coefficients will be modified. The simulated
+        process in the server will remain unchanged**
 
  
 In order to start disturbing operation of the server, start zaklocenie machine:
