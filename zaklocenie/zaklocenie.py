@@ -25,13 +25,12 @@ last_data = '[' + data + ']'
 while(True):
 #    dyn_process_session.set_nonexistent(data)
     dyn_process_session.set_input("[[1000000.03532324]]")
-    dyn_process_session.set_input("[[1000000.03532324], [2], [213]]")
+    dyn_process_session.set_input("[[1000000.03532324], [2]]")
+    dyn_process_session.set_input("[[1000000.03532324], [2], [30]]")
     dyn_process_session.set_input("[[1000000.03532324], [2], [213],\
                                     [23]]")
     dyn_process_session.set_input("[[1000000.03532324], [2], [213],\
                                     [23], [4324]]")
-    dyn_process_session.set_input("[[1000000.03532324], [2], [213],\
-                                          [23], [213], [34534]]")
     dyn_process_session.set_nonexistent("[[1000000.03532324], [2]]")
 #    dyn_process_session.set_input("[[bleble.03532324], " +
 #                                    data +
