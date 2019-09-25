@@ -17,7 +17,7 @@ from flask import Flask, request
 from flask_restplus import Resource, Api
 
 log = logging.getLogger('werkzeug')
-log.setLevel(logging.WARNING)
+log.setLevel(logging.INFO)
 
 app = Flask(__name__)
 api = Api(app=app, title='Server', description='Provides an API to control\
