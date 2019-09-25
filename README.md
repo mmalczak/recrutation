@@ -35,16 +35,16 @@ The environment is configured using Vagrant.
 
 In order to start the environment, got to the main directory and issue:
 
-$ vagrant up
+    $ vagrant up
 
 
 After the configuration, in order to log into each of the machines, issue:
 
-$ vagrant ssh $<machine_name>
+    $ vagrant ssh $<machine_name>
 
 e.g.:
 
-$ vagrant ssh client
+    $ vagrant ssh client
 
 
 The folder /vagrant of the virtual machine is synchronised with the root of
@@ -76,9 +76,9 @@ script is run. The documentation is available in the same folder as the script.
 The client will configure the server with matrices A, B and C describing the
 process according to the following equations:
 
-x(t+1) = Ax(t) + Bv(t)
+    x(t+1) = Ax(t) + Bv(t)
 
-y(t) = Cx(t)
+    y(t) = Cx(t)
 
 
 The same matrices are used to design observer(L) and controller(K) matrices of
@@ -88,26 +88,26 @@ the dead-beat controller.
 The client module exposes command-line interface. The following commands are
 available:
 
-s - shows the information about the output of the dynamic process as well as
-    the frequency of sending control signal to the dynamic process
+    s - shows the information about the output of the dynamic process as well as
+        the frequency of sending control signal to the dynamic process
 
-h - hides the above information
+    h - hides the above information
 
-exit - exits the client application
+    exit - exits the client application
 
-controller_coeff - used to changed coefficients of the controller. The
-    following matrices could be modified: A, B, C, D, L or K. In case of
-    modification of A, B or C - matrices L and K will be recalculated.
-    Matrix D is the feed-forward matrix.
+    controller_coeff - used to changed coefficients of the controller. The
+        following matrices could be modified: A, B, C, D, L or K. In case of
+        modification of A, B or C - matrices L and K will be recalculated.
+        Matrix D is the feed-forward matrix.
 
  
 In order to start disturbing operation of the server, start zaklocenie machine:
-$ vagrant ssh zaklocenie
+    $ vagrant ssh zaklocenie
 
 
 In virtual machine, start zaklocenie.py script: 
 
-$ python3.6 /vagrant/zaklocenie/zaklocenie.py
+    $ python3.6 /vagrant/zaklocenie/zaklocenie.py
 
 
 Description of the disruption produced by zaklocenie is available in README
@@ -120,12 +120,12 @@ The disruption could be stopped by firewall, configured by snort.
 For that purpose login to the fw_router machine and start the firewall.py
 script:
 
-$ vagrant ssh fw_router 
+    $ vagrant ssh fw_router 
 
 
 In virtual machine:
 
-$ sudo python3.6 /vagrant/fw_router/firewall.py 
+    $ sudo python3.6 /vagrant/fw_router/firewall.py 
 
 
 It will start the service exposing REST API for the snort module, listening for
@@ -134,11 +134,11 @@ the IPs to block.
 
 Then, login to the snort machine start the Snort software:
 
-$ vagrant ssh snort 
+    $ vagrant ssh snort 
 
 In virtual machine:
 
-$ sudo python3.6 /vagrant/snort/snort.py 
+    $ sudo python3.6 /vagrant/snort/snort.py 
 
 It will start the Snort software with predifined rule. It will produce an alert
 if during 3 seconds 400 packets are sent to 20.0.0.0/24 - local network where
@@ -154,12 +154,13 @@ back to normal.
 
 
 In order to see the messages written into the database, login to db machine: 
-$ vagrant ssh db
+
+    $ vagrant ssh db
 
 
 In the virtual machine, run the script:
 
-$ python3.6 /vagrant/db/mongo_print.py  
+    $ python3.6 /vagrant/db/mongo_print.py  
  
 
 It should print all the records in the database(in this case, one record).
