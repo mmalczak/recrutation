@@ -27,7 +27,8 @@ class Commands(cmd.Cmd):
         self.logger.setLevel('INFO')
 
     def do_exit(self, line):
-        sys.exit()
+        self.queue.put(['exit', 'none', 'none'])
+        return 1
 
     def do_controller_coeff(self, line):
         available_names = ['A', 'B', 'C', 'D', 'K', 'L']

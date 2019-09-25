@@ -261,6 +261,8 @@ def main():
         logger.info("====================================")
         try:
             [type, name, values] = queue_.get_nowait()
+            if type is 'exit':
+                sys.exit()
             getattr(controller, type)(name, values)
         except queue.Empty:
             pass
