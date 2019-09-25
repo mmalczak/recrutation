@@ -30,6 +30,8 @@ Vagrant.configure("2") do |config|
         db.vm.provision :shell, path: "db/db_conf.sh"
         db.vm.provision "shell",
             inline: "python3.6 -m pip install pymongo" 
+        db.vm.provision "shell",
+            inline: "python3.6 /vagrant/db/mongo.py" 
     end
 
     config.vm.define :fw_router do |fw_router|
