@@ -1,0 +1,8 @@
+The component zaklocenie connects to the server using the 'requests' Python
+library. In order to flood the server with data, it sends in the loop two types
+of messages:
+    * messages updating the input of the dynamic process. In every loop
+      5 messages are sent, each with different number of inputs: 
+      between 1 and 5. 
+ 
+    * messages to non-defined route.
