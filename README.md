@@ -102,6 +102,7 @@ available:
 
  
 In order to start disturbing operation of the server, start zaklocenie machine:
+
     $ vagrant ssh zaklocenie
 
 
