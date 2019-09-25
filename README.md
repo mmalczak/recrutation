@@ -100,7 +100,7 @@ of the API in .json format is automatically generated every time the server.py
 script is run. The documentation is available in the same folder as the script.
 
 The same matrices that are used to configure the process in the server (A, B and C)
-are used to design observer(L) and controller(K) matrices of
+are used to design observer (L) and controller (K) matrices of
 the dead-beat controller. 
 
 
