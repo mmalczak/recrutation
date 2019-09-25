@@ -1,6 +1,4 @@
-**
-Attacks detection in distributed control system environment.
-**
+**Attacks detection in distributed control system environment.**
 
 The project is a recrutation task for NASK.
 
