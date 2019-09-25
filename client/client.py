@@ -194,26 +194,23 @@ def main():
     commands_thread = CommandsThread(commands)
     commands_thread.start()
 
-    num_states = 3
-    num_inputs = 2
-    delay = 0
-    nonlinearity = 'unity'
-    error_dist_mu = 0
-    error_dist_sigma = 1
-    feed_forward = [[100],
-                    [100]]
-    A = [[0.1, 0.2, 0.3],
-         [0.3, 0.4, 0.1],
-         [0.2, 0.7, 0.4]
-        ]
-    B = [[1, 0.5],
-         [-1, -0.3],
-         [0.2, 0.1]
-        ]
-    C = [[0.6, 0.8, 0.7],
-         [0.5, 0.4, 0.2]
-        ]
-    D = [[1, 0], [0, 1]]
+    init_data = None
+    with open('/vagrant/client/init_data.json') as f:
+        init_data = json.load(f)
+
+    num_states = init_data['num_states']
+    num_inputs = init_data['num_inputs']
+    delay = init_data['delay']
+    nonlinearity = init_data['nonlinearity']
+    error_dist_mu = init_data['error_dist_mu']
+    error_dist_sigma = init_data['error_dist_sigma']
+    feed_forward = init_data['feed_forward']
+    A = init_data['A']
+    B = init_data['B']
+    C = init_data['C']
+    D = init_data['D']
+
+
     controller = Controller(num_states, num_inputs)
     controller.set_matrix('A', A)
     controller.set_matrix('B', B)
