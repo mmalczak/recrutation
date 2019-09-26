@@ -8,7 +8,6 @@ from numpy import matrix
 from numpy import dot
 from numpy import zeros
 from numpy import transpose
-import scipy.signal
 import control
 from commands import Commands
 from commands import CommandsThread
@@ -18,13 +17,11 @@ logging.config.dictConfig(DEFAULT_CONFIG)
 logger = logging.getLogger(__name__)
 
 
-
 def np_to_json(data):
     if type(data) == int:
         return json.dumps(data)
     else:
         return json.dumps(data.tolist())
-
 
 def json_to_np(data):
     return np.matrix(json.loads(data))
@@ -49,7 +46,7 @@ class DynamicProcessSession():
 
     def __put(self, path, data):
         try:
-            self.__session.put(self.__address + path, data={'data':data}).json()
+            self.__session.put(self.__address + path, data={'data': data}).json()
         except ConnectionRefusedError:
             logger.critical('Connection refused when exectuting put on ' + path)
             sys.exit()
@@ -59,7 +56,7 @@ class DynamicProcessSession():
 
     def __post(self, path, data):
         try:
-            self.__session.post(self.__address + path, data={'data':data}).json()
+            self.__session.post(self.__address + path, data={'data': data}).json()
         except ConnectionRefusedError:
             logger.critical('Connection refused when exectuting post on ' + path)
             sys.exit()
@@ -120,12 +117,12 @@ class Controller():
         self.update_shapes()
 
     def update_shapes(self):
-        self.expected_shapes = {'A':(self.num_states, self.num_states),
-                                'B':(self.num_states, self.num_inputs),
-                                'C':(self.num_inputs, self.num_states),
-                                'D':(self.num_inputs, self.num_inputs),
-                                'L':(self.num_states, self.num_inputs),
-                                'K':(self.num_inputs, self.num_states)
+        self.expected_shapes = {'A': (self.num_states, self.num_states),
+                                'B': (self.num_states, self.num_inputs),
+                                'C': (self.num_inputs, self.num_states),
+                                'D': (self.num_inputs, self.num_inputs),
+                                'L': (self.num_states, self.num_inputs),
+                                'K': (self.num_inputs, self.num_states)
                                 }
 
     def __zero_init(self):
@@ -154,7 +151,7 @@ class Controller():
             try:
                 self.calculate_observer_controller()
             except TypeError:
-                pass # one of the matrices could be not initialized
+                pass  # one of the matrices could be not initialized
         return True
 
     """OBSERVER"""
@@ -163,12 +160,11 @@ class Controller():
                          dot(self.L, (y-dot(self.C, self.x_est)))
 #        print('get state x_est: {}'.format(self.x_est))
 
-
     """CONTROLLER"""
     def get_control_signal(self, y, feed_forward):
         self.get_est_state(y)
         self.u = dot(self.K, self.x_est)
-        self.u  = self.u + dot(self.D, feed_forward)
+        self.u = self.u + dot(self.D, feed_forward)
         return self.u
 
     def set_num_states(self, num_states):
@@ -182,10 +178,10 @@ class Controller():
         self.update_shapes()
 
     def calculate_observer_controller(self):
-        #self.L = control.acker(transpose(self.A), transpose(self.C), [0, 0])
-        self.L = dot(np.linalg.pinv(transpose(self.C)), transpose(self.A)) # observer
-        self.L = transpose(matrix(self.L))
-        self.K = -dot(np.linalg.pinv(self.B), self.A) # controller
+        self.L = dot(np.linalg.pinv(transpose(self.C)), transpose(self.A))
+        self.L = transpose(matrix(self.L))  # observer
+        self.K = -dot(np.linalg.pinv(self.B), self.A)  # controller
+
 
 def main():
     init_data = None
@@ -225,7 +221,6 @@ def main():
     D = init_data['D']
     if type(D) is not list:
         raise TypeError("D must be list")
-
 
     controller = Controller(num_states, num_inputs)
     if not controller.set_matrix('A', A):
@@ -277,7 +272,6 @@ def main():
         y = json_to_np(y)
         logger.info('y: {}'.format(y))
         u = controller.get_control_signal(y, feed_forward)
-        #print("sterowanie: {}".format(u))
         dyn_process_session.set_input(np_to_json(u))
         time.sleep(0.1)
         logger.info("====================================")
@@ -288,6 +282,7 @@ def main():
             getattr(controller, action)(matrix_name, values)
         except queue.Empty:
             pass
+
 
 if __name__ == '__main__':
     try:

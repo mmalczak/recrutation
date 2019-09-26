@@ -1,33 +1,31 @@
 import random
-import string
 import numpy as np
 from numpy import matrix
 from numpy import dot
 from numpy import zeros
 from numpy import transpose
 import json
-
+from flask import Flask, request
+from flask_restplus import Resource, Api
 import logging
 import logging.config
 from logging_conf import DEFAULT_CONFIG
 logging.config.dictConfig(DEFAULT_CONFIG)
 logger = logging.getLogger(__name__)
-
-from flask import Flask, request
-from flask_restplus import Resource, Api
-
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.INFO)
 
 app = Flask(__name__)
 api = Api(app=app, title='Server', description='Provides an API to control\
-        the dynamic process' )
+        the dynamic process')
+
 
 def np_to_json(data):
     if type(data) == int:
         return json.dumps(data)
     else:
         return json.dumps(data.tolist())
+
 
 def json_to_np(data):
     return np.matrix(json.loads(data))
@@ -36,19 +34,26 @@ def json_to_np(data):
 def unity(x):
     return x
 
+
 def sin(x):
     return np.sin(x)
+
 
 def pow2(x):
     return np.power(x, 2)
 
+
 def pow3(x):
     return np.power(x, 3)
+
 
 def exp(x):
     return np.exp(x)
 
-nonlinearities = {'unity':unity, 'sin':sin, 'pow2':pow2, 'pow3':pow3, 'exp':exp}
+
+nonlinearities = {'unity': unity, 'sin': sin, 'pow2': pow2, 'pow3': pow3,
+                  'exp': exp}
+
 
 class DynamicProcess():
     def __init__(self):
@@ -70,8 +75,6 @@ class DynamicProcess():
         self.fifo = []
         for i in range(self.delay):
             self.fifo.append(self.__y)
-
-
 
     def set_value(self, u):
         self.__x = dot(self.coeff['A'], self.__x) + dot(self.coeff['B'], u)
@@ -138,6 +141,7 @@ class MeasureControlWebService(Resource):
         u = json_to_np(value)
         controller.set_value(u)
 
+
 @api.route('/coefficients/<string:type>')
 @api.doc(params={'type': 'Name of the matrix to modify'})
 class CoefficientsWebService(Resource):
@@ -152,6 +156,7 @@ class CoefficientsWebService(Resource):
         value = json_to_np(value)
         dynamic_process.coeff[type] = value
 
+
 @api.route('/num_states')
 class NumStatesWebService(Resource):
 
@@ -163,6 +168,7 @@ class NumStatesWebService(Resource):
         num_states = request.form['data']
         dynamic_process.set_num_states(int(num_states))
 
+
 @api.route('/num_outputs')
 class NumOutputsWebService(Resource):
 
@@ -172,8 +178,9 @@ class NumOutputsWebService(Resource):
     @api.doc(params={'num_outputs': 'Number of outputs/inputs of the dynamic\
                                      process'})
     def put(self):
-        num_outputs= request.form['data']
+        num_outputs = request.form['data']
         dynamic_process.set_num_outputs(int(num_outputs))
+
 
 @api.route('/delay')
 class DelayWebService(Resource):
@@ -187,6 +194,7 @@ class DelayWebService(Resource):
         delay = request.form['data']
         dynamic_process.set_delay(int(delay))
 
+
 @api.route('/nonlinearity')
 class NonlinearityWebService(Resource):
 
@@ -196,6 +204,7 @@ class NonlinearityWebService(Resource):
     def put(self):
         nonlinearity = request.form['data']
         dynamic_process.set_nonlinearity(nonlinearity)
+
 
 @api.route('/error_dist/mu')
 class ErrorMuWebService(Resource):
@@ -209,6 +218,7 @@ class ErrorMuWebService(Resource):
         mu = request.form['data']
         dynamic_process.error_dist_mu = float(mu)
 
+
 @api.route('/error_dist/sigma')
 class ErrorSigmaWebService(Resource):
 
@@ -220,7 +230,6 @@ class ErrorSigmaWebService(Resource):
     def put(self):
         sigma = request.form['data']
         dynamic_process.error_dist_sigma = float(sigma)
-
 
 
 app.config["SERVER_NAME"] = "20.0.0.2:5000"

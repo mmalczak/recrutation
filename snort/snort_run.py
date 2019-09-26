@@ -10,7 +10,8 @@ class FirewallSession():
         self.__address = 'http://40.0.0.99:8080/'
 
     def block_IP(self, value):
-        r = self.__session.put(self.__address + 'blocked_IPs/', data={'value':value})
+        r = self.__session.put(self.__address + 'blocked_IPs/',
+                               data={'value': value})
 
 
 firewall_session = FirewallSession()
@@ -32,11 +33,9 @@ with snort_process.stdout:
                 ip = elements[pos]
                 ip = ip.split(':')[0]
                 ip = ip + '/32'
-#                ip = ip.split('.')
-#                ip = ip[0] + '.' + ip[1] + '.' + ip[2] + '.' + '0/24'
                 firewall_session.block_IP(ip)
                 print(ip)
                 print(line, end='')
-                mongo_client.snort_db.blocked_addresses.insert_one({'ip':ip,
+                mongo_client.snort_db.blocked_addresses.insert_one({'ip': ip,
                     'reason': 'Possible TCP DoS - 400 messages during 3 seconds'})
 rc = snort_process.wait()

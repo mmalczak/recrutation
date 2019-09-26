@@ -68,8 +68,6 @@ Vagrant.configure("2") do |config|
         client.vm.provision "shell",
             inline: "python3.6 -m pip install numpy" 
         client.vm.provision "shell",
-            inline: "python3.6 -m pip install scipy" 
-        client.vm.provision "shell",
             inline: "python3.6 -m pip install control" 
     end
 
