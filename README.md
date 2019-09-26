@@ -40,7 +40,7 @@ In case of using proxy, install proxy-conf:
     $ vagrant plugin install vagrant-proxyconf 
 
 Then configure proxy in Vagrantfile -- proxy settings are commented out at the
-beggining of Vagrantfile.
+beginning of Vagrantfile.
 
 In order to start the environment, go to the main directory and issue:
 
@@ -103,7 +103,7 @@ is provided:
     delay - delay of the output of the process (in number of samples)
 
     nonlinearity - function that introduces nonlinearity in the simulated process.
-        Available valules: unity, sin, pow2, pow3, exp. When nonlinearity is
+        Available values: unity, sin, pow2, pow3, exp. When nonlinearity is
         defined, the output value is described with the following equation: 
 
             y(t) = C * nonlinearity(x(t))
@@ -183,7 +183,7 @@ In virtual machine:
 
     $ sudo python3.6 /vagrant/snort/snort_run.py 
 
-It will start Snort software with predifined rule. It will produce an alert
+It will start Snort software with predefined rule. It will produce an alert
 if during 3 seconds 400 packets are sent to 20.0.0.0/24 - local network where
 the server is located.
 
