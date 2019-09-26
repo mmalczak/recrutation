@@ -79,9 +79,9 @@ is provided:
     A, B, C - matrices describing the process simulated in the server. The
         process is described with following equations:
             
-            x(t+1) = Ax(t) + Bv(t)
+            x(t+1) = A * x(t) + B * v(t)
 
-            y(t) = Cx(t)
+            y(t) = C * x(t)
         
         The same matrices are used to design the dead-beat controller:
             * observer matrix (L)
@@ -96,7 +96,11 @@ is provided:
 
     delay - delay of the output of the process (in number of samples)
 
-    nonlinearity - function that introduces nonlinearity in the simulated process
+    nonlinearity - function that introduces nonlinearity in the simulated process.
+        Available valules: unity, sin, pow2, pow3, exp. When nonlinearity is
+        defined, the output value is described with the following equation: 
+
+            y(t) = C * nonlinearity(x(t))
 
     error_dist_mu - value of noise normal distribution expectation
 
