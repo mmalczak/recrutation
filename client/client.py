@@ -157,6 +157,7 @@ class Controller():
                 self.calculate_observer_controller()
             except TypeError:
                 pass # one of the matrices could be not initialized
+        return True
 
     """OBSERVER"""
     def get_est_state(self, y):
@@ -227,17 +228,16 @@ def main():
     if type(D) is not list:
         raise TypeError("D must be list")
 
-    queue_ = queue.Queue()
-    commands = Commands(logger, queue_)
-    commands_thread = CommandsThread(commands)
-    commands_thread.start()
-
 
     controller = Controller(num_states, num_inputs)
-    controller.set_matrix('A', A)
-    controller.set_matrix('B', B)
-    controller.set_matrix('C', C)
-    controller.set_matrix('D', D)
+    if not controller.set_matrix('A', A):
+        sys.exit()
+    if not controller.set_matrix('B', B):
+        sys.exit()
+    if not controller.set_matrix('C', C):
+        sys.exit()
+    if not controller.set_matrix('D', D):
+        sys.exit()
     controller.calculate_observer_controller()
 
     dyn_process_session = DynamicProcessSession()
@@ -257,6 +257,11 @@ def main():
                                                 np.linalg.matrix_rank(W_c)))
     print('The rank of observability matrix is: {}'.format(
                                                 np.linalg.matrix_rank(W_o)))
+
+    queue_ = queue.Queue()
+    commands = Commands(logger, queue_)
+    commands_thread = CommandsThread(commands)
+    commands_thread.start()
 
     t0 = time.perf_counter()
     freq_counter = 0
