@@ -33,7 +33,7 @@ Code for each of the virtual machines is located in respective folders.
 
 The environment is configured using Vagrant. 
 
-In order to start the environment, got to the main directory and issue:
+In order to start the environment, go to the main directory and issue:
 
     $ vagrant up
 
