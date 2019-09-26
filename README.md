@@ -41,7 +41,7 @@ In order to start the environment, go to the main directory and issue:
     $ vagrant up
 
 
-After the configuration, in order to log into each of the machines, issue:
+Afterwards, in order to log into each of the machines, issue:
 
     $ vagrant ssh $<machine_name>
 
@@ -196,7 +196,7 @@ In the virtual machine, run the script:
     $ python3.6 /vagrant/db/mongo_print.py  
  
 
-It should print all the records in the database(in this case, one record).
+It should print all the records in the database (in this case, one record).
 
 
 
