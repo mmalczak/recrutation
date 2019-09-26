@@ -119,6 +119,8 @@ available:
         modification of A, B or C - matrices L and K will be recalculated.
         (Only controller's coefficients will be modified. The simulated
         process in the server will remain unchanged)
+        example:  
+            controller_coeff A; [[0.1, 0.2, 0.3],[0.3, 0.4, 0.1],[0.2, 0.7, 0.4]] 
 
  
 In order to start disturbing operation of the server, start zaklocenie machine:
