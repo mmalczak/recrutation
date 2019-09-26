@@ -146,9 +146,7 @@ class Controller():
                 logger.error("Wrong input data")
                 return
         value = matrix(value)
-        try:
-            assert value.shape == self.expected_shapes[name]
-        except AssertionError:
+        if value.shape != self.expected_shapes[name]:
             logger.warning("Wrong matrix shape")
             return
         setattr(self, name, value)
