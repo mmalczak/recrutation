@@ -22,9 +22,9 @@ The project is a recrutation task for NASK.
 
     * snort
         Monitors the traffic between the router and the server. In case of an
-        alert, it sends respective rule to the firewall in order to block the
-        traffic. Moreover, it writes the information about an alert to the
-        database.
+        alert, it sends respective IP address to the firewall in order to block
+        the traffic from the given address. Moreover, it writes the information
+        about the alert to the database.
 
     * db
         Database -- it records the events received from the snort module.
