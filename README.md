@@ -35,6 +35,12 @@ Code for each of the virtual machines is located in respective folders.
 
 The environment is configured using Vagrant. 
 
+In case of using proxy, install proxy-conf:
+
+    $ vagrant plugin install vagrant-proxyconf 
+
+Then configure proxy in Vagrantfile -- proxy settings are commented out at the
+beggining of Vagrantfile.
 
 In order to start the environment, go to the main directory and issue:
 
