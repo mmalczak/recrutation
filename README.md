@@ -159,7 +159,7 @@ Then, login to the snort machine and start Snort software:
 
 In virtual machine:
 
-    $ sudo python3.6 /vagrant/snort/snort.py 
+    $ sudo python3.6 /vagrant/snort/snort_run.py 
 
 It will start Snort software with predifined rule. It will produce an alert
 if during 3 seconds 400 packets are sent to 20.0.0.0/24 - local network where
