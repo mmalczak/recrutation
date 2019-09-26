@@ -1,4 +1,4 @@
-**Attacks detection in distributed control system environment.**
+# Attacks detection in distributed control system environment.
 
 The project is a recrutation task for NASK.
 
@@ -31,7 +31,10 @@ The project is a recrutation task for NASK.
 
 Code for each of the virtual machines is located in respective folders.
 
+## Environment configuration
+
 The environment is configured using Vagrant. 
+
 
 In order to start the environment, go to the main directory and issue:
 
@@ -51,6 +54,8 @@ The folder /vagrant of the virtual machine is synchronised with the root of
 the project on the host machine.
  
 
+## Starting server process and client controller
+
 In order to present the functionalities of the dynamic process and controller,
 after logging to the server and client machines, run respective scripts:
 
@@ -66,6 +71,7 @@ In client:
 The order of running the scripts is important -- You cannot control the process
 which is not started.
 
+## Dynamic process and controller configuration 
 
 Client reads the configuration from init_data.json file. The following data
 is provided:
@@ -76,6 +82,11 @@ is provided:
             x(t+1) = Ax(t) + Bv(t)
 
             y(t) = Cx(t)
+        
+        The same matrices are used to design the dead-beat controller:
+            * observer matrix (L)
+            * controller matrix (K)
+        Controller can be modified afterwards using command-line interface.
 
     D - feed-forward matrix of the controller
 
@@ -94,15 +105,12 @@ is provided:
     feed_forward - feed_forward input
  
 
-The client will send configuration of the process to the server. The
-process is configured with the use of the Rest API. The Swagger documentation
+The client sends configuration of the process to the server. The
+process is configured with the use of Rest API. The Swagger documentation
 of the API in .json format is automatically generated every time the server.py
 script is run. The documentation is available in the same folder as the script.
 
-The same matrices that are used to configure the process in the server (A, B and C)
-are used to design observer (L) and controller (K) matrices of
-the dead-beat controller. 
-
+## Command line interface
 
 The client module exposes command-line interface. The following commands are
 available:
@@ -122,6 +130,8 @@ available:
         example:  
             controller_coeff A; [[0.1, 0.2, 0.3],[0.3, 0.4, 0.1],[0.2, 0.7, 0.4]] 
 
+
+## Disruption of the server process
  
 In order to start disturbing operation of the server, start zaklocenie machine:
 
