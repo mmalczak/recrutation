@@ -21,8 +21,8 @@
    "num_inputs": 2,
    "delay": 0,
    "nonlinearity": "unity",
-   "error_dist_mu": 0,
-   "error_dist_sigma": 1,
+   "error_dist_mu": 0.0,
+   "error_dist_sigma": 1.0,
    "feed_forward": [[100],
                     [100]
                    ]

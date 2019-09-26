@@ -1,6 +1,8 @@
 import threading
 import cmd
 import sys
+import logging
+logger = logging.getLogger(__name__)
 
 
 class CommandsThread(threading.Thread):
@@ -32,7 +34,11 @@ class Commands(cmd.Cmd):
 
     def do_controller_coeff(self, line):
         available_names = ['A', 'B', 'C', 'D', 'K', 'L']
-        [name, value] = line.split(';')
+        try:
+            [name, value] = line.split(';')
+        except ValueError:
+            logger.error('Wrong syntax')
+            return
         if name in available_names:
             self.queue.put(['set_matrix', name, value])
         else:

@@ -189,26 +189,48 @@ class Controller():
         self.K = -dot(np.linalg.pinv(self.B), self.A) # controller
 
 def main():
-    queue_ = queue.Queue()
-    commands = Commands(logger, queue_)
-    commands_thread = CommandsThread(commands)
-    commands_thread.start()
-
     init_data = None
     with open('/vagrant/client/init_data.json') as f:
         init_data = json.load(f)
 
     num_states = init_data['num_states']
+    if type(num_states) is not int:
+        raise TypeError("num_states must be int")
     num_inputs = init_data['num_inputs']
+    if type(num_inputs) is not int:
+        raise TypeError("num_inputs must be int")
     delay = init_data['delay']
+    if type(delay) is not int:
+        raise TypeError("delay must be int")
     nonlinearity = init_data['nonlinearity']
+    if type(nonlinearity) is not str:
+        raise TypeError("nonlinearity must be str")
     error_dist_mu = init_data['error_dist_mu']
+    if type(error_dist_mu) is not float:
+        raise TypeError("error_dist_mu must be float")
     error_dist_sigma = init_data['error_dist_sigma']
+    if type(error_dist_sigma) is not float:
+        raise TypeError("error_dist_sigma must be float")
     feed_forward = init_data['feed_forward']
+    if type(feed_forward) is not list:
+        raise TypeError("feed_forward must be list")
     A = init_data['A']
+    if type(A) is not list:
+        raise TypeError("A must be list")
     B = init_data['B']
+    if type(B) is not list:
+        raise TypeError("B must be list")
     C = init_data['C']
+    if type(C) is not list:
+        raise TypeError("C must be list")
     D = init_data['D']
+    if type(D) is not list:
+        raise TypeError("D must be list")
+
+    queue_ = queue.Queue()
+    commands = Commands(logger, queue_)
+    commands_thread = CommandsThread(commands)
+    commands_thread.start()
 
 
     controller = Controller(num_states, num_inputs)
@@ -257,10 +279,10 @@ def main():
         time.sleep(0.1)
         logger.info("====================================")
         try:
-            [type, name, values] = queue_.get_nowait()
-            if type is 'exit':
+            [action, matrix_name, values] = queue_.get_nowait()
+            if action is 'exit':
                 sys.exit()
-            getattr(controller, type)(name, values)
+            getattr(controller, action)(matrix_name, values)
         except queue.Empty:
             pass
 
